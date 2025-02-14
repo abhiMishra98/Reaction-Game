@@ -1,0 +1,8 @@
+D:\psoc-workspace\Lab Assignments\Workspace02\Assignment02.cydsn\Assignment02.cyprj|875c21a1-a1e2-4831-a538-f37c802a95d2
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|9ba6f4b2-9451-49db-b1ee-9ed3fe8f64f4
+C:\Users\abhim\OneDrive\Documents\PSoC Creator\4.4\Downloads ( 4.4).cylib\Downloads ( 4.4).cyprj|77de5a88-9747-4ab5-a5f5-1583234dfde2
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|1daeee88-f01e-4354-9312-0e6a84cff54c
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|0b590454-3174-44dd-acf6-3da5f3da1bff
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|80a1cfdb-5bab-478d-a97a-d1714fc72296
+D:\psoc-workspace\Lab Assignments\Workspace02\erikaReactionGame.cydsn\erikaReactionGame.cyprj|8742ed0e-1272-4c3a-8846-b587c46448b7
+D:\psoc-workspace\Lab Assignments\Workspace02\Arcadian.cydsn\Arcadian.cyprj|42b3023d-5787-4906-afac-3ccbd637d891

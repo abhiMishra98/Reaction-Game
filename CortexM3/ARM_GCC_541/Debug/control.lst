@@ -1,0 +1,4117 @@
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"control.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.randomTimeGenerate,"ax",%progbits
+  20              		.align	2
+  21              		.global	randomTimeGenerate
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	randomTimeGenerate, %function
+  25              	randomTimeGenerate:
+  26              	.LFB111:
+  27              		.file 1 "source\\asw\\control.c"
+   1:source\asw/control.c **** /**
+   2:source\asw/control.c **** * \file <filename>
+   3:source\asw/control.c **** * \author <author-name>
+   4:source\asw/control.c **** * \date <date>
+   5:source\asw/control.c **** *
+   6:source\asw/control.c **** * \brief <Symbolic File name>
+   7:source\asw/control.c **** *
+   8:source\asw/control.c **** * \copyright Copyright ©2016
+   9:source\asw/control.c **** * Department of electrical engineering and information technology, Hochschule Darmstadt - Universit
+  10:source\asw/control.c **** * Permission to use, copy, modify, and distribute this software and its documentation for education
+  11:source\asw/control.c **** * (unless permitted by h_da) and official h_da projects, is hereby granted for enrolled students of
+  12:source\asw/control.c **** * this paragraph and the following paragraph appear in all copies, modifications, and distributions
+  13:source\asw/control.c **** * Contact Prof.Dr.-Ing. Peter Fromm, peter.fromm@h-da.de, Birkenweg 8 64295 Darmstadt - GERMANY for
+  14:source\asw/control.c **** *
+  15:source\asw/control.c **** * \warning This software is a PROTOTYPE version and is not designed or intended for use in producti
+  16:source\asw/control.c **** * The user represents and warrants that it will NOT use or redistribute the Software for such purpo
+  17:source\asw/control.c **** * This prototype is for research purposes only. This software is provided "AS IS," without a warran
+  18:source\asw/control.c **** */
+  19:source\asw/control.c **** 
+  20:source\asw/control.c **** /*****************************************************************************/
+  21:source\asw/control.c **** /* Include files                                                             */
+  22:source\asw/control.c **** /*****************************************************************************/
+  23:source\asw/control.c **** 
+  24:source\asw/control.c **** #include "control.h"
+  25:source\asw/control.c **** 
+  26:source\asw/control.c **** /*****************************************************************************/
+  27:source\asw/control.c **** /* Local pre-processor symbols/macros ('#define')                            */
+  28:source\asw/control.c **** /*****************************************************************************/
+  29:source\asw/control.c **** 
+  30:source\asw/control.c **** /*****************************************************************************/
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 2
+
+
+  31:source\asw/control.c **** /* Global variable definitions (declared in header file with 'extern')       */
+  32:source\asw/control.c **** /*****************************************************************************/
+  33:source\asw/control.c **** 
+  34:source\asw/control.c **** typedef enum
+  35:source\asw/control.c **** {
+  36:source\asw/control.c ****     CTRL_STATE_WAIT_BTNPRESS,
+  37:source\asw/control.c ****     CTRL_STATE_WAIT_TIMEOUT,
+  38:source\asw/control.c ****     CTRL_STATE_USERACTION,
+  39:source\asw/control.c ****     CTRL_STATE_GAMEENDS
+  40:source\asw/control.c **** } CTRL_state_t;
+  41:source\asw/control.c **** 
+  42:source\asw/control.c **** static CTRL_state_t CTRL_state = CTRL_STATE_WAIT_BTNPRESS;
+  43:source\asw/control.c **** 
+  44:source\asw/control.c **** /*****************************************************************************/
+  45:source\asw/control.c **** /* Local type definitions ('typedef')                                        */
+  46:source\asw/control.c **** /*****************************************************************************/
+  47:source\asw/control.c **** 
+  48:source\asw/control.c **** /*****************************************************************************/
+  49:source\asw/control.c **** /* Local variable definitions ('static')                                     */
+  50:source\asw/control.c **** /*****************************************************************************/
+  51:source\asw/control.c **** 
+  52:source\asw/control.c **** static unsigned short randomNum = 0;
+  53:source\asw/control.c **** unsigned short buttonFlag = 0;
+  54:source\asw/control.c **** unsigned short time_count = 0;
+  55:source\asw/control.c **** static unsigned short noOfTurns = 0;
+  56:source\asw/control.c **** 
+  57:source\asw/control.c **** /*****************************************************************************/
+  58:source\asw/control.c **** /* Local function prototypes ('static')                                      */
+  59:source\asw/control.c **** /*****************************************************************************/
+  60:source\asw/control.c **** 
+  61:source\asw/control.c **** 
+  62:source\asw/control.c **** /*****************************************************************************/
+  63:source\asw/control.c **** /* Function implementation - global ('extern') and local ('static')          */
+  64:source\asw/control.c **** /*****************************************************************************/
+  65:source\asw/control.c **** 
+  66:source\asw/control.c **** /**
+  67:source\asw/control.c ****  * <Description>
+  68:source\asw/control.c ****  * \param <first para>
+  69:source\asw/control.c ****  * \return <return value>
+  70:source\asw/control.c ****  */
+  71:source\asw/control.c **** unsigned short randomTimeGenerate(){
+  28              		.loc 1 71 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 3, -8
+  35              		.cfi_offset 14, -4
+  72:source\asw/control.c ****     unsigned short randomTimeMs = (rand()%3 +1)*1000;
+  36              		.loc 1 72 0
+  37 0002 FFF7FEFF 		bl	rand
+  38              	.LVL0:
+  39 0006 084B     		ldr	r3, .L3
+  40 0008 83FB0023 		smull	r2, r3, r3, r0
+  41 000c A3EBE073 		sub	r3, r3, r0, asr #31
+  42 0010 03EB4303 		add	r3, r3, r3, lsl #1
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 3
+
+
+  43 0014 C31A     		subs	r3, r0, r3
+  44 0016 0133     		adds	r3, r3, #1
+  45 0018 C3EB4312 		rsb	r2, r3, r3, lsl #5
+  46 001c 03EB8203 		add	r3, r3, r2, lsl #2
+  47 0020 D800     		lsls	r0, r3, #3
+  48 0022 80B2     		uxth	r0, r0
+  49              	.LVL1:
+  73:source\asw/control.c ****     return randomTimeMs;
+  74:source\asw/control.c **** }
+  50              		.loc 1 74 0
+  51 0024 08BD     		pop	{r3, pc}
+  52              	.L4:
+  53 0026 00BF     		.align	2
+  54              	.L3:
+  55 0028 56555555 		.word	1431655766
+  56              		.cfi_endproc
+  57              	.LFE111:
+  58              		.size	randomTimeGenerate, .-randomTimeGenerate
+  59              		.section	.text.randomNumGenerate,"ax",%progbits
+  60              		.align	2
+  61              		.global	randomNumGenerate
+  62              		.thumb
+  63              		.thumb_func
+  64              		.type	randomNumGenerate, %function
+  65              	randomNumGenerate:
+  66              	.LFB112:
+  75:source\asw/control.c **** 
+  76:source\asw/control.c **** RC_t randomNumGenerate(){
+  67              		.loc 1 76 0
+  68              		.cfi_startproc
+  69              		@ args = 0, pretend = 0, frame = 0
+  70              		@ frame_needed = 0, uses_anonymous_args = 0
+  71 0000 10B5     		push	{r4, lr}
+  72              		.cfi_def_cfa_offset 8
+  73              		.cfi_offset 4, -8
+  74              		.cfi_offset 14, -4
+  77:source\asw/control.c ****     Pin_SelA_Write(1);
+  75              		.loc 1 77 0
+  76 0002 0120     		movs	r0, #1
+  77 0004 FFF7FEFF 		bl	Pin_SelA_Write
+  78              	.LVL2:
+  78:source\asw/control.c ****     char buffer[128];
+  79:source\asw/control.c ****     uint8_t bitPattern = 0b00111111;
+  80:source\asw/control.c ****     sevenSegmentDisplay(bitPattern);
+  79              		.loc 1 80 0
+  80 0008 3F20     		movs	r0, #63
+  81 000a FFF7FEFF 		bl	sevenSegmentDisplay
+  82              	.LVL3:
+  81:source\asw/control.c ****     
+  82:source\asw/control.c ****     randomNum = (rand()%2 +1);
+  83              		.loc 1 82 0
+  84 000e FFF7FEFF 		bl	rand
+  85              	.LVL4:
+  86 0012 174B     		ldr	r3, .L11
+  87 0014 1840     		ands	r0, r0, r3
+  88 0016 03D5     		bpl	.L6
+  89 0018 0138     		subs	r0, r0, #1
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 4
+
+
+  90 001a 60F00100 		orn	r0, r0, #1
+  91 001e 0130     		adds	r0, r0, #1
+  92              	.L6:
+  93 0020 144C     		ldr	r4, .L11+4
+  94 0022 0130     		adds	r0, r0, #1
+  95 0024 2080     		strh	r0, [r4]	@ movhi
+  83:source\asw/control.c ****     
+  84:source\asw/control.c ****     Pin_SelA_Write(0);
+  96              		.loc 1 84 0
+  97 0026 0020     		movs	r0, #0
+  98 0028 FFF7FEFF 		bl	Pin_SelA_Write
+  99              	.LVL5:
+  85:source\asw/control.c ****     
+  86:source\asw/control.c ****     if(randomNum == 1){
+ 100              		.loc 1 86 0
+ 101 002c 2388     		ldrh	r3, [r4]
+ 102 002e 012B     		cmp	r3, #1
+ 103 0030 0CD1     		bne	.L7
+ 104              	.LVL6:
+  87:source\asw/control.c ****         bitPattern = 0b00000110;
+  88:source\asw/control.c ****         sevenSegmentDisplay(bitPattern);
+ 105              		.loc 1 88 0
+ 106 0032 0620     		movs	r0, #6
+ 107 0034 FFF7FEFF 		bl	sevenSegmentDisplay
+ 108              	.LVL7:
+  89:source\asw/control.c ****         time_count= 0;
+ 109              		.loc 1 89 0
+ 110 0038 0024     		movs	r4, #0
+ 111 003a 0E4B     		ldr	r3, .L11+4
+ 112 003c 5C80     		strh	r4, [r3, #2]	@ movhi
+  90:source\asw/control.c ****         SetRelAlarm(alrm_Timer,1,1);      
+ 113              		.loc 1 90 0
+ 114 003e 0122     		movs	r2, #1
+ 115 0040 1146     		mov	r1, r2
+ 116 0042 0220     		movs	r0, #2
+ 117 0044 FFF7FEFF 		bl	EE_oo_SetRelAlarm
+ 118              	.LVL8:
+  91:source\asw/control.c ****         return RC_SUCCESS;
+ 119              		.loc 1 91 0
+ 120 0048 2046     		mov	r0, r4
+ 121 004a 10BD     		pop	{r4, pc}
+ 122              	.LVL9:
+ 123              	.L7:
+  92:source\asw/control.c ****     }else if(randomNum == 2){
+ 124              		.loc 1 92 0
+ 125 004c 022B     		cmp	r3, #2
+ 126 004e 0CD1     		bne	.L9
+ 127              	.LVL10:
+  93:source\asw/control.c ****         bitPattern = 0b01011011;
+  94:source\asw/control.c ****         sevenSegmentDisplay(bitPattern);
+ 128              		.loc 1 94 0
+ 129 0050 5B20     		movs	r0, #91
+ 130 0052 FFF7FEFF 		bl	sevenSegmentDisplay
+ 131              	.LVL11:
+  95:source\asw/control.c ****         time_count= 0;
+ 132              		.loc 1 95 0
+ 133 0056 0024     		movs	r4, #0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 5
+
+
+ 134 0058 064B     		ldr	r3, .L11+4
+ 135 005a 5C80     		strh	r4, [r3, #2]	@ movhi
+  96:source\asw/control.c ****         SetRelAlarm(alrm_Timer,1,1);
+ 136              		.loc 1 96 0
+ 137 005c 0122     		movs	r2, #1
+ 138 005e 1146     		mov	r1, r2
+ 139 0060 0220     		movs	r0, #2
+ 140 0062 FFF7FEFF 		bl	EE_oo_SetRelAlarm
+ 141              	.LVL12:
+  97:source\asw/control.c ****         return RC_SUCCESS;
+ 142              		.loc 1 97 0
+ 143 0066 2046     		mov	r0, r4
+ 144 0068 10BD     		pop	{r4, pc}
+ 145              	.LVL13:
+ 146              	.L9:
+  98:source\asw/control.c ****     }else{
+  99:source\asw/control.c ****         return RC_ERROR;
+ 147              		.loc 1 99 0
+ 148 006a 4FF0FF30 		mov	r0, #-1
+ 100:source\asw/control.c ****     }
+ 101:source\asw/control.c **** }
+ 149              		.loc 1 101 0
+ 150 006e 10BD     		pop	{r4, pc}
+ 151              	.L12:
+ 152              		.align	2
+ 153              	.L11:
+ 154 0070 01000080 		.word	-2147483647
+ 155 0074 00000000 		.word	.LANCHOR0
+ 156              		.cfi_endproc
+ 157              	.LFE112:
+ 158              		.size	randomNumGenerate, .-randomNumGenerate
+ 159              		.section	.text.validateBtnPress1,"ax",%progbits
+ 160              		.align	2
+ 161              		.global	validateBtnPress1
+ 162              		.thumb
+ 163              		.thumb_func
+ 164              		.type	validateBtnPress1, %function
+ 165              	validateBtnPress1:
+ 166              	.LFB114:
+ 102:source\asw/control.c **** 
+ 103:source\asw/control.c **** void CTRL_processEvent1(CTRL_event_t ev)
+ 104:source\asw/control.c **** { 
+ 105:source\asw/control.c ****     char buffer[64];
+ 106:source\asw/control.c ****     unsigned short randomTime;
+ 107:source\asw/control.c ****     switch (CTRL_state)
+ 108:source\asw/control.c ****     {
+ 109:source\asw/control.c ****         case CTRL_STATE_WAIT_BTNPRESS:
+ 110:source\asw/control.c ****             if (ev == EV_button1Press)
+ 111:source\asw/control.c ****             {     
+ 112:source\asw/control.c ****                if(noOfTurns<10){
+ 113:source\asw/control.c ****                     randomTime = randomTimeGenerate();
+ 114:source\asw/control.c ****                     SetRelAlarm(alrm_randomTime, randomTime,0);
+ 115:source\asw/control.c ****                     CTRL_state = CTRL_STATE_USERACTION;
+ 116:source\asw/control.c ****                 }
+ 117:source\asw/control.c ****             }
+ 118:source\asw/control.c ****             else if (ev == EV_button2Press)
+ 119:source\asw/control.c ****             {  
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 6
+
+
+ 120:source\asw/control.c ****                 if(noOfTurns<10){
+ 121:source\asw/control.c ****                     randomTime = randomTimeGenerate();
+ 122:source\asw/control.c ****                     SetRelAlarm(alrm_randomTime, randomTime,0);
+ 123:source\asw/control.c ****                     CTRL_state = CTRL_STATE_USERACTION;
+ 124:source\asw/control.c ****                 }
+ 125:source\asw/control.c ****             }
+ 126:source\asw/control.c ****             else
+ 127:source\asw/control.c ****             {
+ 128:source\asw/control.c ****                     //nothing
+ 129:source\asw/control.c ****             }
+ 130:source\asw/control.c ****             break;         
+ 131:source\asw/control.c ****         case  CTRL_STATE_USERACTION:
+ 132:source\asw/control.c ****               if (ev == EV_button2Press)
+ 133:source\asw/control.c ****             {
+ 134:source\asw/control.c ****                 validateBtnPress1(ev);
+ 135:source\asw/control.c ****             }
+ 136:source\asw/control.c ****             else if (ev == EV_button1Press)
+ 137:source\asw/control.c ****             {
+ 138:source\asw/control.c ****                  validateBtnPress1(ev);
+ 139:source\asw/control.c ****             }
+ 140:source\asw/control.c ****             else
+ 141:source\asw/control.c ****             {
+ 142:source\asw/control.c ****                 //nothing
+ 143:source\asw/control.c ****             }
+ 144:source\asw/control.c ****             break;
+ 145:source\asw/control.c ****         case CTRL_STATE_GAMEENDS:
+ 146:source\asw/control.c ****             CancelAlarm(alrm_50ms);
+ 147:source\asw/control.c ****             sprintf(buffer+strlen(buffer),"%s\r\n","Game Ends");
+ 148:source\asw/control.c ****             sprintf(buffer+strlen(buffer),"Correct buttons pressed = %d\r\n",game.crctBtnPress);
+ 149:source\asw/control.c ****             sprintf(buffer+strlen(buffer),"Total time = %dms \r\n",game.totalTime);
+ 150:source\asw/control.c ****             float totalTime = (float)game.totalTime/10;
+ 151:source\asw/control.c ****             sprintf(buffer + strlen(buffer), "Average time = %d.%06d ms \r\n",(int)totalTime, (int)
+ 152:source\asw/control.c ****             UART_LOG_PutString(buffer);
+ 153:source\asw/control.c ****             
+ 154:source\asw/control.c ****             
+ 155:source\asw/control.c ****             LED_init();
+ 156:source\asw/control.c ****             
+ 157:source\asw/control.c ****             stopFaderGlower();
+ 158:source\asw/control.c ****             
+ 159:source\asw/control.c ****             sevenSegmentInit(); 
+ 160:source\asw/control.c ****             SetEvent(tsk_control,ev_resetGame);
+ 161:source\asw/control.c ****             CTRL_state = CTRL_STATE_WAIT_BTNPRESS;                  
+ 162:source\asw/control.c ****         default:
+ 163:source\asw/control.c ****             break;  
+ 164:source\asw/control.c ****     }
+ 165:source\asw/control.c ****     
+ 166:source\asw/control.c **** }
+ 167:source\asw/control.c **** 
+ 168:source\asw/control.c **** void validateBtnPress1(CTRL_event_t ev){
+ 167              		.loc 1 168 0
+ 168              		.cfi_startproc
+ 169              		@ args = 0, pretend = 0, frame = 128
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171              	.LVL14:
+ 172 0000 70B5     		push	{r4, r5, r6, lr}
+ 173              		.cfi_def_cfa_offset 16
+ 174              		.cfi_offset 4, -16
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 7
+
+
+ 175              		.cfi_offset 5, -12
+ 176              		.cfi_offset 6, -8
+ 177              		.cfi_offset 14, -4
+ 178 0002 A0B0     		sub	sp, sp, #128
+ 179              		.cfi_def_cfa_offset 144
+ 180 0004 0446     		mov	r4, r0
+ 169:source\asw/control.c ****     char buffer[128] = {0};
+ 181              		.loc 1 169 0
+ 182 0006 8022     		movs	r2, #128
+ 183 0008 0021     		movs	r1, #0
+ 184 000a 6846     		mov	r0, sp
+ 185              	.LVL15:
+ 186 000c FFF7FEFF 		bl	memset
+ 187              	.LVL16:
+ 170:source\asw/control.c ****     if(noOfTurns < 10){
+ 188              		.loc 1 170 0
+ 189 0010 984B     		ldr	r3, .L26
+ 190 0012 9B88     		ldrh	r3, [r3, #4]
+ 191 0014 092B     		cmp	r3, #9
+ 192 0016 00F22A81 		bhi	.L13
+ 171:source\asw/control.c ****         if(time_count<1000){
+ 193              		.loc 1 171 0
+ 194 001a 964B     		ldr	r3, .L26
+ 195 001c 5B88     		ldrh	r3, [r3, #2]
+ 196 001e B3F57A7F 		cmp	r3, #1000
+ 197 0022 80F0F780 		bcs	.L15
+ 172:source\asw/control.c ****             switch(ev){
+ 198              		.loc 1 172 0
+ 199 0026 082C     		cmp	r4, #8
+ 200 0028 02D0     		beq	.L16
+ 201 002a 092C     		cmp	r4, #9
+ 202 002c 79D0     		beq	.L17
+ 203 002e 1EE1     		b	.L13
+ 204              	.L16:
+ 173:source\asw/control.c ****              case EV_button1Press:
+ 174:source\asw/control.c ****                 if(randomNum == 2){
+ 205              		.loc 1 174 0
+ 206 0030 904B     		ldr	r3, .L26
+ 207 0032 1B88     		ldrh	r3, [r3]
+ 208 0034 022B     		cmp	r3, #2
+ 209 0036 46D1     		bne	.L18
+ 175:source\asw/control.c ****                     CancelAlarm(alrm_Timer);
+ 210              		.loc 1 175 0
+ 211 0038 0220     		movs	r0, #2
+ 212 003a FFF7FEFF 		bl	EE_oo_CancelAlarm
+ 213              	.LVL17:
+ 176:source\asw/control.c ****                     noOfTurns++;
+ 214              		.loc 1 176 0
+ 215 003e 8D4D     		ldr	r5, .L26
+ 216 0040 AC88     		ldrh	r4, [r5, #4]
+ 217 0042 0134     		adds	r4, r4, #1
+ 218 0044 A4B2     		uxth	r4, r4
+ 219 0046 AC80     		strh	r4, [r5, #4]	@ movhi
+ 177:source\asw/control.c ****                     sprintf(buffer+strlen(buffer),"Round number %d \r\n", noOfTurns);
+ 220              		.loc 1 177 0
+ 221 0048 6846     		mov	r0, sp
+ 222 004a FFF7FEFF 		bl	strlen
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 8
+
+
+ 223              	.LVL18:
+ 224 004e 2246     		mov	r2, r4
+ 225 0050 8949     		ldr	r1, .L26+4
+ 226 0052 6844     		add	r0, r0, sp
+ 227 0054 FFF7FEFF 		bl	sprintf
+ 228              	.LVL19:
+ 178:source\asw/control.c ****                     sprintf(buffer + strlen(buffer), "%s \r\n", "Great - correct button pressed");
+ 229              		.loc 1 178 0
+ 230 0058 6846     		mov	r0, sp
+ 231 005a FFF7FEFF 		bl	strlen
+ 232              	.LVL20:
+ 233 005e 874A     		ldr	r2, .L26+8
+ 234 0060 8749     		ldr	r1, .L26+12
+ 235 0062 6844     		add	r0, r0, sp
+ 236 0064 FFF7FEFF 		bl	sprintf
+ 237              	.LVL21:
+ 179:source\asw/control.c ****                     game.totalTime+=time_count;
+ 238              		.loc 1 179 0
+ 239 0068 6C88     		ldrh	r4, [r5, #2]
+ 240 006a 864E     		ldr	r6, .L26+16
+ 241 006c 3368     		ldr	r3, [r6]
+ 242 006e 2344     		add	r3, r3, r4
+ 243 0070 3360     		str	r3, [r6]
+ 180:source\asw/control.c ****                     sprintf(buffer + strlen(buffer), "Reaction time :%d ms \r\n", time_count);
+ 244              		.loc 1 180 0
+ 245 0072 6846     		mov	r0, sp
+ 246 0074 FFF7FEFF 		bl	strlen
+ 247              	.LVL22:
+ 248 0078 2246     		mov	r2, r4
+ 249 007a 8349     		ldr	r1, .L26+20
+ 250 007c 6844     		add	r0, r0, sp
+ 251 007e FFF7FEFF 		bl	sprintf
+ 252              	.LVL23:
+ 181:source\asw/control.c ****                    
+ 182:source\asw/control.c ****                     game.crctBtnPress++;
+ 253              		.loc 1 182 0
+ 254 0082 B488     		ldrh	r4, [r6, #4]
+ 255 0084 0134     		adds	r4, r4, #1
+ 256 0086 A4B2     		uxth	r4, r4
+ 257 0088 B480     		strh	r4, [r6, #4]	@ movhi
+ 183:source\asw/control.c ****  
+ 184:source\asw/control.c ****                     sprintf(buffer + strlen(buffer),"Correct buttons press = %d \r\n", game.crctBtn
+ 258              		.loc 1 184 0
+ 259 008a 6846     		mov	r0, sp
+ 260 008c FFF7FEFF 		bl	strlen
+ 261              	.LVL24:
+ 262 0090 2246     		mov	r2, r4
+ 263 0092 7E49     		ldr	r1, .L26+24
+ 264 0094 6844     		add	r0, r0, sp
+ 265 0096 FFF7FEFF 		bl	sprintf
+ 266              	.LVL25:
+ 185:source\asw/control.c ****                     UART_LOG_PutString(buffer);
+ 267              		.loc 1 185 0
+ 268 009a 6846     		mov	r0, sp
+ 269 009c FFF7FEFF 		bl	UART_LOG_PutString
+ 270              	.LVL26:
+ 186:source\asw/control.c ****                     sevenSegmentInit(); 
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 9
+
+
+ 271              		.loc 1 186 0
+ 272 00a0 FFF7FEFF 		bl	sevenSegmentInit
+ 273              	.LVL27:
+ 187:source\asw/control.c ****                     
+ 188:source\asw/control.c ****                     if(noOfTurns == 10){
+ 274              		.loc 1 188 0
+ 275 00a4 AB88     		ldrh	r3, [r5, #4]
+ 276 00a6 0A2B     		cmp	r3, #10
+ 277 00a8 05D1     		bne	.L19
+ 189:source\asw/control.c ****                        CTRL_state = CTRL_STATE_GAMEENDS;
+ 278              		.loc 1 189 0
+ 279 00aa 0322     		movs	r2, #3
+ 280 00ac AA71     		strb	r2, [r5, #6]
+ 190:source\asw/control.c ****                        CTRL_processEvent1(EV_button1Press);
+ 281              		.loc 1 190 0
+ 282 00ae 0820     		movs	r0, #8
+ 283 00b0 FFF7FEFF 		bl	CTRL_processEvent1
+ 284              	.LVL28:
+ 285 00b4 DBE0     		b	.L13
+ 286              	.L19:
+ 191:source\asw/control.c ****                     }else{
+ 192:source\asw/control.c ****                        SetEvent(tsk_control,ev_resetGame);
+ 287              		.loc 1 192 0
+ 288 00b6 0821     		movs	r1, #8
+ 289 00b8 0220     		movs	r0, #2
+ 290 00ba FFF7FEFF 		bl	EE_oo_SetEvent
+ 291              	.LVL29:
+ 193:source\asw/control.c ****                        CTRL_state = CTRL_STATE_WAIT_BTNPRESS; 
+ 292              		.loc 1 193 0
+ 293 00be 0022     		movs	r2, #0
+ 294 00c0 6C4B     		ldr	r3, .L26
+ 295 00c2 9A71     		strb	r2, [r3, #6]
+ 296 00c4 D3E0     		b	.L13
+ 297              	.L18:
+ 194:source\asw/control.c ****                     }
+ 195:source\asw/control.c ****                 }else{
+ 196:source\asw/control.c ****                     CancelAlarm(alrm_Timer);
+ 298              		.loc 1 196 0
+ 299 00c6 0220     		movs	r0, #2
+ 300 00c8 FFF7FEFF 		bl	EE_oo_CancelAlarm
+ 301              	.LVL30:
+ 197:source\asw/control.c ****                     noOfTurns++;
+ 302              		.loc 1 197 0
+ 303 00cc 694D     		ldr	r5, .L26
+ 304 00ce AC88     		ldrh	r4, [r5, #4]
+ 305 00d0 0134     		adds	r4, r4, #1
+ 306 00d2 A4B2     		uxth	r4, r4
+ 307 00d4 AC80     		strh	r4, [r5, #4]	@ movhi
+ 198:source\asw/control.c ****                     
+ 199:source\asw/control.c ****                     sprintf(buffer+strlen(buffer),"Round number %d \r\n", noOfTurns);
+ 308              		.loc 1 199 0
+ 309 00d6 6846     		mov	r0, sp
+ 310 00d8 FFF7FEFF 		bl	strlen
+ 311              	.LVL31:
+ 312 00dc 2246     		mov	r2, r4
+ 313 00de 6649     		ldr	r1, .L26+4
+ 314 00e0 6844     		add	r0, r0, sp
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 10
+
+
+ 315 00e2 FFF7FEFF 		bl	sprintf
+ 316              	.LVL32:
+ 200:source\asw/control.c ****                     sprintf(buffer+strlen(buffer),"%s \r\n","Incorrect button pressed");
+ 317              		.loc 1 200 0
+ 318 00e6 6846     		mov	r0, sp
+ 319 00e8 FFF7FEFF 		bl	strlen
+ 320              	.LVL33:
+ 321 00ec 684A     		ldr	r2, .L26+28
+ 322 00ee 6449     		ldr	r1, .L26+12
+ 323 00f0 6844     		add	r0, r0, sp
+ 324 00f2 FFF7FEFF 		bl	sprintf
+ 325              	.LVL34:
+ 201:source\asw/control.c ****                     UART_LOG_PutString(buffer);
+ 326              		.loc 1 201 0
+ 327 00f6 6846     		mov	r0, sp
+ 328 00f8 FFF7FEFF 		bl	UART_LOG_PutString
+ 329              	.LVL35:
+ 202:source\asw/control.c ****                     sevenSegmentInit();  
+ 330              		.loc 1 202 0
+ 331 00fc FFF7FEFF 		bl	sevenSegmentInit
+ 332              	.LVL36:
+ 203:source\asw/control.c ****                     
+ 204:source\asw/control.c ****                     if(noOfTurns == 10){
+ 333              		.loc 1 204 0
+ 334 0100 AB88     		ldrh	r3, [r5, #4]
+ 335 0102 0A2B     		cmp	r3, #10
+ 336 0104 05D1     		bne	.L20
+ 205:source\asw/control.c ****                        CTRL_state = CTRL_STATE_GAMEENDS;
+ 337              		.loc 1 205 0
+ 338 0106 0322     		movs	r2, #3
+ 339 0108 AA71     		strb	r2, [r5, #6]
+ 206:source\asw/control.c ****                        CTRL_processEvent1(EV_button1Press);
+ 340              		.loc 1 206 0
+ 341 010a 0820     		movs	r0, #8
+ 342 010c FFF7FEFF 		bl	CTRL_processEvent1
+ 343              	.LVL37:
+ 344 0110 ADE0     		b	.L13
+ 345              	.L20:
+ 207:source\asw/control.c ****                     }else{
+ 208:source\asw/control.c ****                        SetEvent(tsk_control,ev_resetGame);
+ 346              		.loc 1 208 0
+ 347 0112 0821     		movs	r1, #8
+ 348 0114 0220     		movs	r0, #2
+ 349 0116 FFF7FEFF 		bl	EE_oo_SetEvent
+ 350              	.LVL38:
+ 209:source\asw/control.c ****                        CTRL_state = CTRL_STATE_WAIT_BTNPRESS; 
+ 351              		.loc 1 209 0
+ 352 011a 0022     		movs	r2, #0
+ 353 011c 554B     		ldr	r3, .L26
+ 354 011e 9A71     		strb	r2, [r3, #6]
+ 355 0120 A5E0     		b	.L13
+ 356              	.L17:
+ 210:source\asw/control.c ****                     }
+ 211:source\asw/control.c ****                 }   
+ 212:source\asw/control.c ****                 break;
+ 213:source\asw/control.c ****              case EV_button2Press:
+ 214:source\asw/control.c ****                 if(randomNum == 1){
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 11
+
+
+ 357              		.loc 1 214 0
+ 358 0122 544B     		ldr	r3, .L26
+ 359 0124 1B88     		ldrh	r3, [r3]
+ 360 0126 012B     		cmp	r3, #1
+ 361 0128 46D1     		bne	.L21
+ 215:source\asw/control.c ****                     CancelAlarm(alrm_Timer);
+ 362              		.loc 1 215 0
+ 363 012a 0220     		movs	r0, #2
+ 364 012c FFF7FEFF 		bl	EE_oo_CancelAlarm
+ 365              	.LVL39:
+ 216:source\asw/control.c ****                     noOfTurns++;
+ 366              		.loc 1 216 0
+ 367 0130 504D     		ldr	r5, .L26
+ 368 0132 AC88     		ldrh	r4, [r5, #4]
+ 369 0134 0134     		adds	r4, r4, #1
+ 370 0136 A4B2     		uxth	r4, r4
+ 371 0138 AC80     		strh	r4, [r5, #4]	@ movhi
+ 217:source\asw/control.c ****                     
+ 218:source\asw/control.c ****                     sprintf(buffer+strlen(buffer),"Round number %d \r\n", noOfTurns);
+ 372              		.loc 1 218 0
+ 373 013a 6846     		mov	r0, sp
+ 374 013c FFF7FEFF 		bl	strlen
+ 375              	.LVL40:
+ 376 0140 2246     		mov	r2, r4
+ 377 0142 4D49     		ldr	r1, .L26+4
+ 378 0144 6844     		add	r0, r0, sp
+ 379 0146 FFF7FEFF 		bl	sprintf
+ 380              	.LVL41:
+ 219:source\asw/control.c ****                     sprintf(buffer + strlen(buffer), "%s \r\n", "Great - correct button pressed");
+ 381              		.loc 1 219 0
+ 382 014a 6846     		mov	r0, sp
+ 383 014c FFF7FEFF 		bl	strlen
+ 384              	.LVL42:
+ 385 0150 4A4A     		ldr	r2, .L26+8
+ 386 0152 4B49     		ldr	r1, .L26+12
+ 387 0154 6844     		add	r0, r0, sp
+ 388 0156 FFF7FEFF 		bl	sprintf
+ 389              	.LVL43:
+ 220:source\asw/control.c ****                     game.totalTime+=time_count;
+ 390              		.loc 1 220 0
+ 391 015a 6C88     		ldrh	r4, [r5, #2]
+ 392 015c 494E     		ldr	r6, .L26+16
+ 393 015e 3368     		ldr	r3, [r6]
+ 394 0160 2344     		add	r3, r3, r4
+ 395 0162 3360     		str	r3, [r6]
+ 221:source\asw/control.c ****                     sprintf(buffer + strlen(buffer), "Reaction time :%d ms \r\n", time_count);
+ 396              		.loc 1 221 0
+ 397 0164 6846     		mov	r0, sp
+ 398 0166 FFF7FEFF 		bl	strlen
+ 399              	.LVL44:
+ 400 016a 2246     		mov	r2, r4
+ 401 016c 4649     		ldr	r1, .L26+20
+ 402 016e 6844     		add	r0, r0, sp
+ 403 0170 FFF7FEFF 		bl	sprintf
+ 404              	.LVL45:
+ 222:source\asw/control.c ****                     
+ 223:source\asw/control.c ****                     game.crctBtnPress++;
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 12
+
+
+ 405              		.loc 1 223 0
+ 406 0174 B488     		ldrh	r4, [r6, #4]
+ 407 0176 0134     		adds	r4, r4, #1
+ 408 0178 A4B2     		uxth	r4, r4
+ 409 017a B480     		strh	r4, [r6, #4]	@ movhi
+ 224:source\asw/control.c ****                     
+ 225:source\asw/control.c ****                     sprintf(buffer + strlen(buffer),"Correct buttons press = %d \r\n", game.crctBtn
+ 410              		.loc 1 225 0
+ 411 017c 6846     		mov	r0, sp
+ 412 017e FFF7FEFF 		bl	strlen
+ 413              	.LVL46:
+ 414 0182 2246     		mov	r2, r4
+ 415 0184 4149     		ldr	r1, .L26+24
+ 416 0186 6844     		add	r0, r0, sp
+ 417 0188 FFF7FEFF 		bl	sprintf
+ 418              	.LVL47:
+ 226:source\asw/control.c ****                     UART_LOG_PutString(buffer);
+ 419              		.loc 1 226 0
+ 420 018c 6846     		mov	r0, sp
+ 421 018e FFF7FEFF 		bl	UART_LOG_PutString
+ 422              	.LVL48:
+ 227:source\asw/control.c ****                     sevenSegmentInit();   
+ 423              		.loc 1 227 0
+ 424 0192 FFF7FEFF 		bl	sevenSegmentInit
+ 425              	.LVL49:
+ 228:source\asw/control.c ****                     
+ 229:source\asw/control.c ****                     if(noOfTurns == 10){
+ 426              		.loc 1 229 0
+ 427 0196 AB88     		ldrh	r3, [r5, #4]
+ 428 0198 0A2B     		cmp	r3, #10
+ 429 019a 05D1     		bne	.L22
+ 230:source\asw/control.c ****                        CTRL_state = CTRL_STATE_GAMEENDS;
+ 430              		.loc 1 230 0
+ 431 019c 0322     		movs	r2, #3
+ 432 019e AA71     		strb	r2, [r5, #6]
+ 231:source\asw/control.c ****                        CTRL_processEvent1(EV_button1Press);
+ 433              		.loc 1 231 0
+ 434 01a0 0820     		movs	r0, #8
+ 435 01a2 FFF7FEFF 		bl	CTRL_processEvent1
+ 436              	.LVL50:
+ 437 01a6 62E0     		b	.L13
+ 438              	.L22:
+ 232:source\asw/control.c ****                     }else{
+ 233:source\asw/control.c ****                        SetEvent(tsk_control,ev_resetGame);
+ 439              		.loc 1 233 0
+ 440 01a8 0821     		movs	r1, #8
+ 441 01aa 0220     		movs	r0, #2
+ 442 01ac FFF7FEFF 		bl	EE_oo_SetEvent
+ 443              	.LVL51:
+ 234:source\asw/control.c ****                        CTRL_state = CTRL_STATE_WAIT_BTNPRESS; 
+ 444              		.loc 1 234 0
+ 445 01b0 0022     		movs	r2, #0
+ 446 01b2 304B     		ldr	r3, .L26
+ 447 01b4 9A71     		strb	r2, [r3, #6]
+ 448 01b6 5AE0     		b	.L13
+ 449              	.L21:
+ 235:source\asw/control.c ****                     }
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 13
+
+
+ 236:source\asw/control.c ****                 }else{
+ 237:source\asw/control.c ****                     CancelAlarm(alrm_Timer);
+ 450              		.loc 1 237 0
+ 451 01b8 0220     		movs	r0, #2
+ 452 01ba FFF7FEFF 		bl	EE_oo_CancelAlarm
+ 453              	.LVL52:
+ 238:source\asw/control.c ****                     noOfTurns++;
+ 454              		.loc 1 238 0
+ 455 01be 2D4D     		ldr	r5, .L26
+ 456 01c0 AC88     		ldrh	r4, [r5, #4]
+ 457 01c2 0134     		adds	r4, r4, #1
+ 458 01c4 A4B2     		uxth	r4, r4
+ 459 01c6 AC80     		strh	r4, [r5, #4]	@ movhi
+ 239:source\asw/control.c ****                     
+ 240:source\asw/control.c ****                     sprintf(buffer+strlen(buffer),"Round number %d \r\n", noOfTurns);
+ 460              		.loc 1 240 0
+ 461 01c8 6846     		mov	r0, sp
+ 462 01ca FFF7FEFF 		bl	strlen
+ 463              	.LVL53:
+ 464 01ce 2246     		mov	r2, r4
+ 465 01d0 2949     		ldr	r1, .L26+4
+ 466 01d2 6844     		add	r0, r0, sp
+ 467 01d4 FFF7FEFF 		bl	sprintf
+ 468              	.LVL54:
+ 241:source\asw/control.c ****                     sprintf(buffer+strlen(buffer),"%s \r\n","Incorrect button pressed");
+ 469              		.loc 1 241 0
+ 470 01d8 6846     		mov	r0, sp
+ 471 01da FFF7FEFF 		bl	strlen
+ 472              	.LVL55:
+ 473 01de 2C4A     		ldr	r2, .L26+28
+ 474 01e0 2749     		ldr	r1, .L26+12
+ 475 01e2 6844     		add	r0, r0, sp
+ 476 01e4 FFF7FEFF 		bl	sprintf
+ 477              	.LVL56:
+ 242:source\asw/control.c ****                     UART_LOG_PutString(buffer);
+ 478              		.loc 1 242 0
+ 479 01e8 6846     		mov	r0, sp
+ 480 01ea FFF7FEFF 		bl	UART_LOG_PutString
+ 481              	.LVL57:
+ 243:source\asw/control.c ****                     
+ 244:source\asw/control.c ****                     sevenSegmentInit();  
+ 482              		.loc 1 244 0
+ 483 01ee FFF7FEFF 		bl	sevenSegmentInit
+ 484              	.LVL58:
+ 245:source\asw/control.c ****                     
+ 246:source\asw/control.c ****                     if(noOfTurns == 10){
+ 485              		.loc 1 246 0
+ 486 01f2 AB88     		ldrh	r3, [r5, #4]
+ 487 01f4 0A2B     		cmp	r3, #10
+ 488 01f6 05D1     		bne	.L23
+ 247:source\asw/control.c ****                        CTRL_state = CTRL_STATE_GAMEENDS;
+ 489              		.loc 1 247 0
+ 490 01f8 0322     		movs	r2, #3
+ 491 01fa AA71     		strb	r2, [r5, #6]
+ 248:source\asw/control.c ****                        CTRL_processEvent1(EV_button1Press);
+ 492              		.loc 1 248 0
+ 493 01fc 0820     		movs	r0, #8
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 14
+
+
+ 494 01fe FFF7FEFF 		bl	CTRL_processEvent1
+ 495              	.LVL59:
+ 496 0202 34E0     		b	.L13
+ 497              	.L23:
+ 249:source\asw/control.c ****                     }else{
+ 250:source\asw/control.c ****                        SetEvent(tsk_control,ev_resetGame);
+ 498              		.loc 1 250 0
+ 499 0204 0821     		movs	r1, #8
+ 500 0206 0220     		movs	r0, #2
+ 501 0208 FFF7FEFF 		bl	EE_oo_SetEvent
+ 502              	.LVL60:
+ 251:source\asw/control.c ****                        CTRL_state = CTRL_STATE_WAIT_BTNPRESS; 
+ 503              		.loc 1 251 0
+ 504 020c 0022     		movs	r2, #0
+ 505 020e 194B     		ldr	r3, .L26
+ 506 0210 9A71     		strb	r2, [r3, #6]
+ 507 0212 2CE0     		b	.L13
+ 508              	.L15:
+ 252:source\asw/control.c ****                     }
+ 253:source\asw/control.c ****                 }   
+ 254:source\asw/control.c ****                 break;
+ 255:source\asw/control.c ****              default:
+ 256:source\asw/control.c ****                 break;
+ 257:source\asw/control.c ****             }          
+ 258:source\asw/control.c ****         }else{
+ 259:source\asw/control.c ****             CancelAlarm(alrm_Timer);
+ 509              		.loc 1 259 0
+ 510 0214 0220     		movs	r0, #2
+ 511 0216 FFF7FEFF 		bl	EE_oo_CancelAlarm
+ 512              	.LVL61:
+ 260:source\asw/control.c ****             noOfTurns++;
+ 513              		.loc 1 260 0
+ 514 021a 164D     		ldr	r5, .L26
+ 515 021c AC88     		ldrh	r4, [r5, #4]
+ 516 021e 0134     		adds	r4, r4, #1
+ 517 0220 A4B2     		uxth	r4, r4
+ 518 0222 AC80     		strh	r4, [r5, #4]	@ movhi
+ 261:source\asw/control.c ****             
+ 262:source\asw/control.c ****             sprintf(buffer+strlen(buffer),"Round number %d \r\n", noOfTurns);
+ 519              		.loc 1 262 0
+ 520 0224 6846     		mov	r0, sp
+ 521 0226 FFF7FEFF 		bl	strlen
+ 522              	.LVL62:
+ 523 022a 2246     		mov	r2, r4
+ 524 022c 1249     		ldr	r1, .L26+4
+ 525 022e 6844     		add	r0, r0, sp
+ 526 0230 FFF7FEFF 		bl	sprintf
+ 527              	.LVL63:
+ 263:source\asw/control.c ****             sprintf(buffer+strlen(buffer),"%s \r\n", "Too slow");
+ 528              		.loc 1 263 0
+ 529 0234 6846     		mov	r0, sp
+ 530 0236 FFF7FEFF 		bl	strlen
+ 531              	.LVL64:
+ 532 023a 164A     		ldr	r2, .L26+32
+ 533 023c 1049     		ldr	r1, .L26+12
+ 534 023e 6844     		add	r0, r0, sp
+ 535 0240 FFF7FEFF 		bl	sprintf
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 15
+
+
+ 536              	.LVL65:
+ 264:source\asw/control.c ****             UART_LOG_PutString(buffer); 
+ 537              		.loc 1 264 0
+ 538 0244 6846     		mov	r0, sp
+ 539 0246 FFF7FEFF 		bl	UART_LOG_PutString
+ 540              	.LVL66:
+ 265:source\asw/control.c ****             
+ 266:source\asw/control.c ****             sevenSegmentInit();  
+ 541              		.loc 1 266 0
+ 542 024a FFF7FEFF 		bl	sevenSegmentInit
+ 543              	.LVL67:
+ 267:source\asw/control.c ****             
+ 268:source\asw/control.c ****              if(noOfTurns == 10){
+ 544              		.loc 1 268 0
+ 545 024e AB88     		ldrh	r3, [r5, #4]
+ 546 0250 0A2B     		cmp	r3, #10
+ 547 0252 05D1     		bne	.L24
+ 269:source\asw/control.c ****                    CTRL_state = CTRL_STATE_GAMEENDS;
+ 548              		.loc 1 269 0
+ 549 0254 0322     		movs	r2, #3
+ 550 0256 AA71     		strb	r2, [r5, #6]
+ 270:source\asw/control.c ****                    CTRL_processEvent1(EV_button1Press);
+ 551              		.loc 1 270 0
+ 552 0258 0820     		movs	r0, #8
+ 553 025a FFF7FEFF 		bl	CTRL_processEvent1
+ 554              	.LVL68:
+ 555 025e 06E0     		b	.L13
+ 556              	.L24:
+ 271:source\asw/control.c ****               }else{
+ 272:source\asw/control.c ****                    SetEvent(tsk_control,ev_resetGame);
+ 557              		.loc 1 272 0
+ 558 0260 0821     		movs	r1, #8
+ 559 0262 0220     		movs	r0, #2
+ 560 0264 FFF7FEFF 		bl	EE_oo_SetEvent
+ 561              	.LVL69:
+ 273:source\asw/control.c ****                    CTRL_state = CTRL_STATE_WAIT_BTNPRESS; 
+ 562              		.loc 1 273 0
+ 563 0268 0022     		movs	r2, #0
+ 564 026a 024B     		ldr	r3, .L26
+ 565 026c 9A71     		strb	r2, [r3, #6]
+ 566              	.L13:
+ 274:source\asw/control.c ****               } 
+ 275:source\asw/control.c ****         }
+ 276:source\asw/control.c ****       
+ 277:source\asw/control.c ****     }
+ 278:source\asw/control.c ****     
+ 279:source\asw/control.c **** 
+ 280:source\asw/control.c **** }
+ 567              		.loc 1 280 0
+ 568 026e 20B0     		add	sp, sp, #128
+ 569              		.cfi_def_cfa_offset 16
+ 570              		@ sp needed
+ 571 0270 70BD     		pop	{r4, r5, r6, pc}
+ 572              	.L27:
+ 573 0272 00BF     		.align	2
+ 574              	.L26:
+ 575 0274 00000000 		.word	.LANCHOR0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 16
+
+
+ 576 0278 00000000 		.word	.LC0
+ 577 027c 14000000 		.word	.LC1
+ 578 0280 34000000 		.word	.LC2
+ 579 0284 00000000 		.word	game
+ 580 0288 3C000000 		.word	.LC3
+ 581 028c 54000000 		.word	.LC4
+ 582 0290 74000000 		.word	.LC5
+ 583 0294 90000000 		.word	.LC6
+ 584              		.cfi_endproc
+ 585              	.LFE114:
+ 586              		.size	validateBtnPress1, .-validateBtnPress1
+ 587              		.global	__aeabi_ui2f
+ 588              		.global	__aeabi_fdiv
+ 589              		.global	__aeabi_f2iz
+ 590              		.global	__aeabi_i2f
+ 591              		.global	__aeabi_fsub
+ 592              		.global	__aeabi_fmul
+ 593              		.section	.text.CTRL_processEvent1,"ax",%progbits
+ 594              		.align	2
+ 595              		.global	CTRL_processEvent1
+ 596              		.thumb
+ 597              		.thumb_func
+ 598              		.type	CTRL_processEvent1, %function
+ 599              	CTRL_processEvent1:
+ 600              	.LFB113:
+ 104:source\asw/control.c ****     char buffer[64];
+ 601              		.loc 1 104 0
+ 602              		.cfi_startproc
+ 603              		@ args = 0, pretend = 0, frame = 64
+ 604              		@ frame_needed = 0, uses_anonymous_args = 0
+ 605              	.LVL70:
+ 606 0000 70B5     		push	{r4, r5, r6, lr}
+ 607              		.cfi_def_cfa_offset 16
+ 608              		.cfi_offset 4, -16
+ 609              		.cfi_offset 5, -12
+ 610              		.cfi_offset 6, -8
+ 611              		.cfi_offset 14, -4
+ 612 0002 90B0     		sub	sp, sp, #64
+ 613              		.cfi_def_cfa_offset 80
+ 107:source\asw/control.c ****     {
+ 614              		.loc 1 107 0
+ 615 0004 414B     		ldr	r3, .L36
+ 616 0006 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 617 0008 022B     		cmp	r3, #2
+ 618 000a 25D0     		beq	.L30
+ 619 000c 032B     		cmp	r3, #3
+ 620 000e 2DD0     		beq	.L31
+ 621 0010 002B     		cmp	r3, #0
+ 622 0012 78D1     		bne	.L28
+ 623              	.LBB2:
+ 110:source\asw/control.c ****             {     
+ 624              		.loc 1 110 0
+ 625 0014 0828     		cmp	r0, #8
+ 626 0016 0ED1     		bne	.L33
+ 112:source\asw/control.c ****                     randomTime = randomTimeGenerate();
+ 627              		.loc 1 112 0
+ 628 0018 3C4B     		ldr	r3, .L36
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 17
+
+
+ 629 001a 9B88     		ldrh	r3, [r3, #4]
+ 630 001c 092B     		cmp	r3, #9
+ 631 001e 72D8     		bhi	.L28
+ 113:source\asw/control.c ****                     SetRelAlarm(alrm_randomTime, randomTime,0);
+ 632              		.loc 1 113 0
+ 633 0020 FFF7FEFF 		bl	randomTimeGenerate
+ 634              	.LVL71:
+ 114:source\asw/control.c ****                     CTRL_state = CTRL_STATE_USERACTION;
+ 635              		.loc 1 114 0
+ 636 0024 0022     		movs	r2, #0
+ 637 0026 0146     		mov	r1, r0
+ 638 0028 0120     		movs	r0, #1
+ 639              	.LVL72:
+ 640 002a FFF7FEFF 		bl	EE_oo_SetRelAlarm
+ 641              	.LVL73:
+ 115:source\asw/control.c ****                 }
+ 642              		.loc 1 115 0
+ 643 002e 0222     		movs	r2, #2
+ 644 0030 364B     		ldr	r3, .L36
+ 645 0032 9A71     		strb	r2, [r3, #6]
+ 646 0034 67E0     		b	.L28
+ 647              	.LVL74:
+ 648              	.L33:
+ 118:source\asw/control.c ****             {  
+ 649              		.loc 1 118 0
+ 650 0036 0928     		cmp	r0, #9
+ 651 0038 65D1     		bne	.L28
+ 120:source\asw/control.c ****                     randomTime = randomTimeGenerate();
+ 652              		.loc 1 120 0
+ 653 003a 344B     		ldr	r3, .L36
+ 654 003c 9B88     		ldrh	r3, [r3, #4]
+ 655 003e 092B     		cmp	r3, #9
+ 656 0040 61D8     		bhi	.L28
+ 121:source\asw/control.c ****                     SetRelAlarm(alrm_randomTime, randomTime,0);
+ 657              		.loc 1 121 0
+ 658 0042 FFF7FEFF 		bl	randomTimeGenerate
+ 659              	.LVL75:
+ 122:source\asw/control.c ****                     CTRL_state = CTRL_STATE_USERACTION;
+ 660              		.loc 1 122 0
+ 661 0046 0022     		movs	r2, #0
+ 662 0048 0146     		mov	r1, r0
+ 663 004a 0120     		movs	r0, #1
+ 664              	.LVL76:
+ 665 004c FFF7FEFF 		bl	EE_oo_SetRelAlarm
+ 666              	.LVL77:
+ 123:source\asw/control.c ****                 }
+ 667              		.loc 1 123 0
+ 668 0050 0222     		movs	r2, #2
+ 669 0052 2E4B     		ldr	r3, .L36
+ 670 0054 9A71     		strb	r2, [r3, #6]
+ 671 0056 56E0     		b	.L28
+ 672              	.LVL78:
+ 673              	.L30:
+ 132:source\asw/control.c ****             {
+ 674              		.loc 1 132 0
+ 675 0058 0928     		cmp	r0, #9
+ 676 005a 02D1     		bne	.L34
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 18
+
+
+ 134:source\asw/control.c ****             }
+ 677              		.loc 1 134 0
+ 678 005c FFF7FEFF 		bl	validateBtnPress1
+ 679              	.LVL79:
+ 680 0060 51E0     		b	.L28
+ 681              	.LVL80:
+ 682              	.L34:
+ 136:source\asw/control.c ****             {
+ 683              		.loc 1 136 0
+ 684 0062 0828     		cmp	r0, #8
+ 685 0064 4FD1     		bne	.L28
+ 138:source\asw/control.c ****             }
+ 686              		.loc 1 138 0
+ 687 0066 FFF7FEFF 		bl	validateBtnPress1
+ 688              	.LVL81:
+ 689 006a 4CE0     		b	.L28
+ 690              	.LVL82:
+ 691              	.L31:
+ 146:source\asw/control.c ****             sprintf(buffer+strlen(buffer),"%s\r\n","Game Ends");
+ 692              		.loc 1 146 0
+ 693 006c 0020     		movs	r0, #0
+ 694              	.LVL83:
+ 695 006e FFF7FEFF 		bl	EE_oo_CancelAlarm
+ 696              	.LVL84:
+ 147:source\asw/control.c ****             sprintf(buffer+strlen(buffer),"Correct buttons pressed = %d\r\n",game.crctBtnPress);
+ 697              		.loc 1 147 0
+ 698 0072 6846     		mov	r0, sp
+ 699 0074 FFF7FEFF 		bl	strlen
+ 700              	.LVL85:
+ 701 0078 254A     		ldr	r2, .L36+4
+ 702 007a 2649     		ldr	r1, .L36+8
+ 703 007c 6844     		add	r0, r0, sp
+ 704 007e FFF7FEFF 		bl	sprintf
+ 705              	.LVL86:
+ 148:source\asw/control.c ****             sprintf(buffer+strlen(buffer),"Total time = %dms \r\n",game.totalTime);
+ 706              		.loc 1 148 0
+ 707 0082 6846     		mov	r0, sp
+ 708 0084 FFF7FEFF 		bl	strlen
+ 709              	.LVL87:
+ 710 0088 234C     		ldr	r4, .L36+12
+ 711 008a A288     		ldrh	r2, [r4, #4]
+ 712 008c 2349     		ldr	r1, .L36+16
+ 713 008e 6844     		add	r0, r0, sp
+ 714 0090 FFF7FEFF 		bl	sprintf
+ 715              	.LVL88:
+ 149:source\asw/control.c ****             float totalTime = (float)game.totalTime/10;
+ 716              		.loc 1 149 0
+ 717 0094 6846     		mov	r0, sp
+ 718 0096 FFF7FEFF 		bl	strlen
+ 719              	.LVL89:
+ 720 009a 2268     		ldr	r2, [r4]
+ 721 009c 2049     		ldr	r1, .L36+20
+ 722 009e 6844     		add	r0, r0, sp
+ 723 00a0 FFF7FEFF 		bl	sprintf
+ 724              	.LVL90:
+ 150:source\asw/control.c ****             sprintf(buffer + strlen(buffer), "Average time = %d.%06d ms \r\n",(int)totalTime, (int)
+ 725              		.loc 1 150 0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 19
+
+
+ 726 00a4 2068     		ldr	r0, [r4]
+ 727 00a6 FFF7FEFF 		bl	__aeabi_ui2f
+ 728              	.LVL91:
+ 729 00aa 1E49     		ldr	r1, .L36+24
+ 730 00ac FFF7FEFF 		bl	__aeabi_fdiv
+ 731              	.LVL92:
+ 732 00b0 0446     		mov	r4, r0
+ 733              	.LVL93:
+ 151:source\asw/control.c ****             UART_LOG_PutString(buffer);
+ 734              		.loc 1 151 0
+ 735 00b2 6846     		mov	r0, sp
+ 736              	.LVL94:
+ 737 00b4 FFF7FEFF 		bl	strlen
+ 738              	.LVL95:
+ 739 00b8 0546     		mov	r5, r0
+ 740 00ba 2046     		mov	r0, r4
+ 741 00bc FFF7FEFF 		bl	__aeabi_f2iz
+ 742              	.LVL96:
+ 743 00c0 0646     		mov	r6, r0
+ 744 00c2 FFF7FEFF 		bl	__aeabi_i2f
+ 745              	.LVL97:
+ 746 00c6 0146     		mov	r1, r0
+ 747 00c8 2046     		mov	r0, r4
+ 748 00ca FFF7FEFF 		bl	__aeabi_fsub
+ 749              	.LVL98:
+ 750 00ce 1649     		ldr	r1, .L36+28
+ 751 00d0 FFF7FEFF 		bl	__aeabi_fmul
+ 752              	.LVL99:
+ 753 00d4 FFF7FEFF 		bl	__aeabi_f2iz
+ 754              	.LVL100:
+ 755 00d8 0346     		mov	r3, r0
+ 756 00da 3246     		mov	r2, r6
+ 757 00dc 1349     		ldr	r1, .L36+32
+ 758 00de 0DEB0500 		add	r0, sp, r5
+ 759 00e2 FFF7FEFF 		bl	sprintf
+ 760              	.LVL101:
+ 152:source\asw/control.c ****             
+ 761              		.loc 1 152 0
+ 762 00e6 6846     		mov	r0, sp
+ 763 00e8 FFF7FEFF 		bl	UART_LOG_PutString
+ 764              	.LVL102:
+ 155:source\asw/control.c ****             
+ 765              		.loc 1 155 0
+ 766 00ec FFF7FEFF 		bl	LED_init
+ 767              	.LVL103:
+ 157:source\asw/control.c ****             
+ 768              		.loc 1 157 0
+ 769 00f0 FFF7FEFF 		bl	stopFaderGlower
+ 770              	.LVL104:
+ 159:source\asw/control.c ****             SetEvent(tsk_control,ev_resetGame);
+ 771              		.loc 1 159 0
+ 772 00f4 FFF7FEFF 		bl	sevenSegmentInit
+ 773              	.LVL105:
+ 160:source\asw/control.c ****             CTRL_state = CTRL_STATE_WAIT_BTNPRESS;                  
+ 774              		.loc 1 160 0
+ 775 00f8 0821     		movs	r1, #8
+ 776 00fa 0220     		movs	r0, #2
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 20
+
+
+ 777 00fc FFF7FEFF 		bl	EE_oo_SetEvent
+ 778              	.LVL106:
+ 161:source\asw/control.c ****         default:
+ 779              		.loc 1 161 0
+ 780 0100 0022     		movs	r2, #0
+ 781 0102 024B     		ldr	r3, .L36
+ 782 0104 9A71     		strb	r2, [r3, #6]
+ 783              	.LVL107:
+ 784              	.L28:
+ 785              	.LBE2:
+ 166:source\asw/control.c **** 
+ 786              		.loc 1 166 0
+ 787 0106 10B0     		add	sp, sp, #64
+ 788              		.cfi_def_cfa_offset 16
+ 789              		@ sp needed
+ 790 0108 70BD     		pop	{r4, r5, r6, pc}
+ 791              	.L37:
+ 792 010a 00BF     		.align	2
+ 793              	.L36:
+ 794 010c 00000000 		.word	.LANCHOR0
+ 795 0110 9C000000 		.word	.LC7
+ 796 0114 A8000000 		.word	.LC8
+ 797 0118 00000000 		.word	game
+ 798 011c B0000000 		.word	.LC9
+ 799 0120 D0000000 		.word	.LC10
+ 800 0124 00002041 		.word	1092616192
+ 801 0128 00247449 		.word	1232348160
+ 802 012c E8000000 		.word	.LC11
+ 803              		.cfi_endproc
+ 804              	.LFE113:
+ 805              		.size	CTRL_processEvent1, .-CTRL_processEvent1
+ 806              		.global	time_count
+ 807              		.global	buttonFlag
+ 808              		.comm	systickCounter,4,4
+ 809              		.comm	game,8,4
+ 810              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 811              		.align	2
+ 812              	.LC0:
+ 813 0000 526F756E 		.ascii	"Round number %d \015\012\000"
+ 813      64206E75 
+ 813      6D626572 
+ 813      20256420 
+ 813      0D0A00
+ 814 0013 00       		.space	1
+ 815              	.LC1:
+ 816 0014 47726561 		.ascii	"Great - correct button pressed\000"
+ 816      74202D20 
+ 816      636F7272 
+ 816      65637420 
+ 816      62757474 
+ 817 0033 00       		.space	1
+ 818              	.LC2:
+ 819 0034 2573200D 		.ascii	"%s \015\012\000"
+ 819      0A00
+ 820 003a 0000     		.space	2
+ 821              	.LC3:
+ 822 003c 52656163 		.ascii	"Reaction time :%d ms \015\012\000"
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 21
+
+
+ 822      74696F6E 
+ 822      2074696D 
+ 822      65203A25 
+ 822      64206D73 
+ 823              	.LC4:
+ 824 0054 436F7272 		.ascii	"Correct buttons press = %d \015\012\000"
+ 824      65637420 
+ 824      62757474 
+ 824      6F6E7320 
+ 824      70726573 
+ 825 0072 0000     		.space	2
+ 826              	.LC5:
+ 827 0074 496E636F 		.ascii	"Incorrect button pressed\000"
+ 827      72726563 
+ 827      74206275 
+ 827      74746F6E 
+ 827      20707265 
+ 828 008d 000000   		.space	3
+ 829              	.LC6:
+ 830 0090 546F6F20 		.ascii	"Too slow\000"
+ 830      736C6F77 
+ 830      00
+ 831 0099 000000   		.space	3
+ 832              	.LC7:
+ 833 009c 47616D65 		.ascii	"Game Ends\000"
+ 833      20456E64 
+ 833      7300
+ 834 00a6 0000     		.space	2
+ 835              	.LC8:
+ 836 00a8 25730D0A 		.ascii	"%s\015\012\000"
+ 836      00
+ 837 00ad 000000   		.space	3
+ 838              	.LC9:
+ 839 00b0 436F7272 		.ascii	"Correct buttons pressed = %d\015\012\000"
+ 839      65637420 
+ 839      62757474 
+ 839      6F6E7320 
+ 839      70726573 
+ 840 00cf 00       		.space	1
+ 841              	.LC10:
+ 842 00d0 546F7461 		.ascii	"Total time = %dms \015\012\000"
+ 842      6C207469 
+ 842      6D65203D 
+ 842      2025646D 
+ 842      73200D0A 
+ 843 00e5 000000   		.space	3
+ 844              	.LC11:
+ 845 00e8 41766572 		.ascii	"Average time = %d.%06d ms \015\012\000"
+ 845      61676520 
+ 845      74696D65 
+ 845      203D2025 
+ 845      642E2530 
+ 846              		.bss
+ 847              		.align	1
+ 848              		.set	.LANCHOR0,. + 0
+ 849              		.type	randomNum, %object
+ 850              		.size	randomNum, 2
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 22
+
+
+ 851              	randomNum:
+ 852 0000 0000     		.space	2
+ 853              		.type	time_count, %object
+ 854              		.size	time_count, 2
+ 855              	time_count:
+ 856 0002 0000     		.space	2
+ 857              		.type	noOfTurns, %object
+ 858              		.size	noOfTurns, 2
+ 859              	noOfTurns:
+ 860 0004 0000     		.space	2
+ 861              		.type	CTRL_state, %object
+ 862              		.size	CTRL_state, 1
+ 863              	CTRL_state:
+ 864 0006 00       		.space	1
+ 865 0007 00       		.space	1
+ 866              		.type	buttonFlag, %object
+ 867              		.size	buttonFlag, 2
+ 868              	buttonFlag:
+ 869 0008 0000     		.space	2
+ 870              		.text
+ 871              	.Letext0:
+ 872              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 873              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 874              		.file 4 "Generated_Source\\PSoC5/ErikaOS_1_common_ee_types.inc"
+ 875              		.file 5 "Generated_Source\\PSoC5/ErikaOS_1_cortex_mx_ee_cpu.inc"
+ 876              		.file 6 ".\\source\\bsw/global.h"
+ 877              		.file 7 "source\\asw\\../bsw/labboard/game.h"
+ 878              		.file 8 "source\\asw\\control.h"
+ 879              		.file 9 "Generated_Source\\PSoC5/ErikaOS_1_ee_oo_intfunc.inc"
+ 880              		.file 10 "Generated_Source\\PSoC5/ErikaOS_1_cortex_mx_ee_context.inc"
+ 881              		.file 11 "Generated_Source\\PSoC5/ErikaOS_1_common_ee_primitives.inc"
+ 882              		.file 12 "Generated_Source\\PSoC5/core_cm3.h"
+ 883              		.file 13 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4
+ 884              		.file 14 "Generated_Source\\PSoC5/Pin_SelA.h"
+ 885              		.file 15 "source\\asw\\../bsw/labboard/sevenSegment.h"
+ 886              		.file 16 "Generated_Source\\PSoC5/ErikaOS_1_ee_oo_kernel.inc"
+ 887              		.file 17 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4
+ 888              		.file 18 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4
+ 889              		.file 19 "Generated_Source\\PSoC5/UART_LOG.h"
+ 890              		.file 20 "source\\asw\\../bsw/labboard/led.h"
+ 891              		.section	.debug_info,"",%progbits
+ 892              	.Ldebug_info0:
+ 893 0000 840B0000 		.4byte	0xb84
+ 894 0004 0400     		.2byte	0x4
+ 895 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 896 000a 04       		.byte	0x4
+ 897 000b 01       		.uleb128 0x1
+ 898 000c F5050000 		.4byte	.LASF105
+ 899 0010 0C       		.byte	0xc
+ 900 0011 D5000000 		.4byte	.LASF106
+ 901 0015 CE040000 		.4byte	.LASF107
+ 902 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 903 001d 00000000 		.4byte	0
+ 904 0021 00000000 		.4byte	.Ldebug_line0
+ 905 0025 02       		.uleb128 0x2
+ 906 0026 01       		.byte	0x1
+ 907 0027 06       		.byte	0x6
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 23
+
+
+ 908 0028 0B030000 		.4byte	.LASF0
+ 909 002c 03       		.uleb128 0x3
+ 910 002d 66020000 		.4byte	.LASF4
+ 911 0031 02       		.byte	0x2
+ 912 0032 1D       		.byte	0x1d
+ 913 0033 37000000 		.4byte	0x37
+ 914 0037 02       		.uleb128 0x2
+ 915 0038 01       		.byte	0x1
+ 916 0039 08       		.byte	0x8
+ 917 003a EC020000 		.4byte	.LASF1
+ 918 003e 02       		.uleb128 0x2
+ 919 003f 02       		.byte	0x2
+ 920 0040 05       		.byte	0x5
+ 921 0041 9C000000 		.4byte	.LASF2
+ 922 0045 02       		.uleb128 0x2
+ 923 0046 02       		.byte	0x2
+ 924 0047 07       		.byte	0x7
+ 925 0048 CC030000 		.4byte	.LASF3
+ 926 004c 03       		.uleb128 0x3
+ 927 004d 45050000 		.4byte	.LASF5
+ 928 0051 02       		.byte	0x2
+ 929 0052 3F       		.byte	0x3f
+ 930 0053 57000000 		.4byte	0x57
+ 931 0057 02       		.uleb128 0x2
+ 932 0058 04       		.byte	0x4
+ 933 0059 05       		.byte	0x5
+ 934 005a 1C020000 		.4byte	.LASF6
+ 935 005e 03       		.uleb128 0x3
+ 936 005f 11010000 		.4byte	.LASF7
+ 937 0063 02       		.byte	0x2
+ 938 0064 41       		.byte	0x41
+ 939 0065 69000000 		.4byte	0x69
+ 940 0069 02       		.uleb128 0x2
+ 941 006a 04       		.byte	0x4
+ 942 006b 07       		.byte	0x7
+ 943 006c 72030000 		.4byte	.LASF8
+ 944 0070 02       		.uleb128 0x2
+ 945 0071 08       		.byte	0x8
+ 946 0072 05       		.byte	0x5
+ 947 0073 C7010000 		.4byte	.LASF9
+ 948 0077 02       		.uleb128 0x2
+ 949 0078 08       		.byte	0x8
+ 950 0079 07       		.byte	0x7
+ 951 007a 24030000 		.4byte	.LASF10
+ 952 007e 04       		.uleb128 0x4
+ 953 007f 04       		.byte	0x4
+ 954 0080 05       		.byte	0x5
+ 955 0081 696E7400 		.ascii	"int\000"
+ 956 0085 02       		.uleb128 0x2
+ 957 0086 04       		.byte	0x4
+ 958 0087 07       		.byte	0x7
+ 959 0088 83060000 		.4byte	.LASF11
+ 960 008c 03       		.uleb128 0x3
+ 961 008d 58010000 		.4byte	.LASF12
+ 962 0091 03       		.byte	0x3
+ 963 0092 18       		.byte	0x18
+ 964 0093 2C000000 		.4byte	0x2c
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 24
+
+
+ 965 0097 03       		.uleb128 0x3
+ 966 0098 2E040000 		.4byte	.LASF13
+ 967 009c 03       		.byte	0x3
+ 968 009d 2C       		.byte	0x2c
+ 969 009e 4C000000 		.4byte	0x4c
+ 970 00a2 03       		.uleb128 0x3
+ 971 00a3 3B030000 		.4byte	.LASF14
+ 972 00a7 03       		.byte	0x3
+ 973 00a8 30       		.byte	0x30
+ 974 00a9 5E000000 		.4byte	0x5e
+ 975 00ad 02       		.uleb128 0x2
+ 976 00ae 04       		.byte	0x4
+ 977 00af 04       		.byte	0x4
+ 978 00b0 A8010000 		.4byte	.LASF15
+ 979 00b4 02       		.uleb128 0x2
+ 980 00b5 08       		.byte	0x8
+ 981 00b6 04       		.byte	0x4
+ 982 00b7 BA040000 		.4byte	.LASF16
+ 983 00bb 02       		.uleb128 0x2
+ 984 00bc 01       		.byte	0x1
+ 985 00bd 08       		.byte	0x8
+ 986 00be 03040000 		.4byte	.LASF17
+ 987 00c2 02       		.uleb128 0x2
+ 988 00c3 08       		.byte	0x8
+ 989 00c4 04       		.byte	0x4
+ 990 00c5 00000000 		.4byte	.LASF18
+ 991 00c9 03       		.uleb128 0x3
+ 992 00ca AB030000 		.4byte	.LASF19
+ 993 00ce 04       		.byte	0x4
+ 994 00cf 53       		.byte	0x53
+ 995 00d0 7E000000 		.4byte	0x7e
+ 996 00d4 03       		.uleb128 0x3
+ 997 00d5 01030000 		.4byte	.LASF20
+ 998 00d9 04       		.byte	0x4
+ 999 00da 54       		.byte	0x54
+ 1000 00db 85000000 		.4byte	0x85
+ 1001 00df 03       		.uleb128 0x3
+ 1002 00e0 30000000 		.4byte	.LASF21
+ 1003 00e4 05       		.byte	0x5
+ 1004 00e5 4D       		.byte	0x4d
+ 1005 00e6 D4000000 		.4byte	0xd4
+ 1006 00ea 03       		.uleb128 0x3
+ 1007 00eb F8000000 		.4byte	.LASF22
+ 1008 00ef 05       		.byte	0x5
+ 1009 00f0 4F       		.byte	0x4f
+ 1010 00f1 D4000000 		.4byte	0xd4
+ 1011 00f5 03       		.uleb128 0x3
+ 1012 00f6 44010000 		.4byte	.LASF23
+ 1013 00fa 05       		.byte	0x5
+ 1014 00fb 78       		.byte	0x78
+ 1015 00fc C9000000 		.4byte	0xc9
+ 1016 0100 02       		.uleb128 0x2
+ 1017 0101 04       		.byte	0x4
+ 1018 0102 07       		.byte	0x7
+ 1019 0103 CC000000 		.4byte	.LASF24
+ 1020 0107 05       		.uleb128 0x5
+ 1021 0108 A2000000 		.4byte	0xa2
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 25
+
+
+ 1022 010c 06       		.uleb128 0x6
+ 1023 010d 01       		.byte	0x1
+ 1024 010e 25000000 		.4byte	0x25
+ 1025 0112 06       		.byte	0x6
+ 1026 0113 D4       		.byte	0xd4
+ 1027 0114 B5010000 		.4byte	0x1b5
+ 1028 0118 07       		.uleb128 0x7
+ 1029 0119 B4030000 		.4byte	.LASF25
+ 1030 011d 00       		.byte	0
+ 1031 011e 08       		.uleb128 0x8
+ 1032 011f 78040000 		.4byte	.LASF26
+ 1033 0123 7F       		.sleb128 -1
+ 1034 0124 08       		.uleb128 0x8
+ 1035 0125 84030000 		.4byte	.LASF27
+ 1036 0129 7E       		.sleb128 -2
+ 1037 012a 08       		.uleb128 0x8
+ 1038 012b EA000000 		.4byte	.LASF28
+ 1039 012f 7D       		.sleb128 -3
+ 1040 0130 08       		.uleb128 0x8
+ 1041 0131 13040000 		.4byte	.LASF29
+ 1042 0135 7C       		.sleb128 -4
+ 1043 0136 08       		.uleb128 0x8
+ 1044 0137 36050000 		.4byte	.LASF30
+ 1045 013b 7B       		.sleb128 -5
+ 1046 013c 08       		.uleb128 0x8
+ 1047 013d A6000000 		.4byte	.LASF31
+ 1048 0141 7A       		.sleb128 -6
+ 1049 0142 08       		.uleb128 0x8
+ 1050 0143 25020000 		.4byte	.LASF32
+ 1051 0147 79       		.sleb128 -7
+ 1052 0148 08       		.uleb128 0x8
+ 1053 0149 1B000000 		.4byte	.LASF33
+ 1054 014d 78       		.sleb128 -8
+ 1055 014e 08       		.uleb128 0x8
+ 1056 014f 37020000 		.4byte	.LASF34
+ 1057 0153 77       		.sleb128 -9
+ 1058 0154 08       		.uleb128 0x8
+ 1059 0155 4D020000 		.4byte	.LASF35
+ 1060 0159 76       		.sleb128 -10
+ 1061 015a 08       		.uleb128 0x8
+ 1062 015b D4060000 		.4byte	.LASF36
+ 1063 015f 75       		.sleb128 -11
+ 1064 0160 08       		.uleb128 0x8
+ 1065 0161 54030000 		.4byte	.LASF37
+ 1066 0165 74       		.sleb128 -12
+ 1067 0166 08       		.uleb128 0x8
+ 1068 0167 14050000 		.4byte	.LASF38
+ 1069 016b 73       		.sleb128 -13
+ 1070 016c 08       		.uleb128 0x8
+ 1071 016d 90020000 		.4byte	.LASF39
+ 1072 0171 72       		.sleb128 -14
+ 1073 0172 08       		.uleb128 0x8
+ 1074 0173 88000000 		.4byte	.LASF40
+ 1075 0177 71       		.sleb128 -15
+ 1076 0178 08       		.uleb128 0x8
+ 1077 0179 B4050000 		.4byte	.LASF41
+ 1078 017d 70       		.sleb128 -16
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 26
+
+
+ 1079 017e 08       		.uleb128 0x8
+ 1080 017f 47040000 		.4byte	.LASF42
+ 1081 0183 6F       		.sleb128 -17
+ 1082 0184 08       		.uleb128 0x8
+ 1083 0185 B7000000 		.4byte	.LASF43
+ 1084 0189 6E       		.sleb128 -18
+ 1085 018a 08       		.uleb128 0x8
+ 1086 018b F8010000 		.4byte	.LASF44
+ 1087 018f 6D       		.sleb128 -19
+ 1088 0190 08       		.uleb128 0x8
+ 1089 0191 65040000 		.4byte	.LASF45
+ 1090 0195 6C       		.sleb128 -20
+ 1091 0196 08       		.uleb128 0x8
+ 1092 0197 7E020000 		.4byte	.LASF46
+ 1093 019b 6B       		.sleb128 -21
+ 1094 019c 08       		.uleb128 0x8
+ 1095 019d 89050000 		.4byte	.LASF47
+ 1096 01a1 6A       		.sleb128 -22
+ 1097 01a2 08       		.uleb128 0x8
+ 1098 01a3 72050000 		.4byte	.LASF48
+ 1099 01a7 69       		.sleb128 -23
+ 1100 01a8 08       		.uleb128 0x8
+ 1101 01a9 0B020000 		.4byte	.LASF49
+ 1102 01ad 68       		.sleb128 -24
+ 1103 01ae 08       		.uleb128 0x8
+ 1104 01af AE010000 		.4byte	.LASF50
+ 1105 01b3 67       		.sleb128 -25
+ 1106 01b4 00       		.byte	0
+ 1107 01b5 03       		.uleb128 0x3
+ 1108 01b6 CF060000 		.4byte	.LASF51
+ 1109 01ba 06       		.byte	0x6
+ 1110 01bb EF       		.byte	0xef
+ 1111 01bc 0C010000 		.4byte	0x10c
+ 1112 01c0 09       		.uleb128 0x9
+ 1113 01c1 08       		.byte	0x8
+ 1114 01c2 07       		.byte	0x7
+ 1115 01c3 71       		.byte	0x71
+ 1116 01c4 E1010000 		.4byte	0x1e1
+ 1117 01c8 0A       		.uleb128 0xa
+ 1118 01c9 5B040000 		.4byte	.LASF52
+ 1119 01cd 07       		.byte	0x7
+ 1120 01ce 72       		.byte	0x72
+ 1121 01cf A2000000 		.4byte	0xa2
+ 1122 01d3 00       		.byte	0
+ 1123 01d4 0A       		.uleb128 0xa
+ 1124 01d5 17030000 		.4byte	.LASF53
+ 1125 01d9 07       		.byte	0x7
+ 1126 01da 73       		.byte	0x73
+ 1127 01db 45000000 		.4byte	0x45
+ 1128 01df 04       		.byte	0x4
+ 1129 01e0 00       		.byte	0
+ 1130 01e1 03       		.uleb128 0x3
+ 1131 01e2 3B010000 		.4byte	.LASF54
+ 1132 01e6 07       		.byte	0x7
+ 1133 01e7 74       		.byte	0x74
+ 1134 01e8 C0010000 		.4byte	0x1c0
+ 1135 01ec 06       		.uleb128 0x6
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 27
+
+
+ 1136 01ed 01       		.byte	0x1
+ 1137 01ee 37000000 		.4byte	0x37
+ 1138 01f2 08       		.byte	0x8
+ 1139 01f3 65       		.byte	0x65
+ 1140 01f4 3B020000 		.4byte	0x23b
+ 1141 01f8 07       		.uleb128 0x7
+ 1142 01f9 81040000 		.4byte	.LASF55
+ 1143 01fd 00       		.byte	0
+ 1144 01fe 07       		.uleb128 0x7
+ 1145 01ff 62030000 		.4byte	.LASF56
+ 1146 0203 01       		.byte	0x1
+ 1147 0204 07       		.uleb128 0x7
+ 1148 0205 F1030000 		.4byte	.LASF57
+ 1149 0209 02       		.byte	0x2
+ 1150 020a 07       		.uleb128 0x7
+ 1151 020b 36040000 		.4byte	.LASF58
+ 1152 020f 03       		.byte	0x3
+ 1153 0210 07       		.uleb128 0x7
+ 1154 0211 C1040000 		.4byte	.LASF59
+ 1155 0215 04       		.byte	0x4
+ 1156 0216 07       		.uleb128 0x7
+ 1157 0217 00010000 		.4byte	.LASF60
+ 1158 021b 05       		.byte	0x5
+ 1159 021c 07       		.uleb128 0x7
+ 1160 021d 70020000 		.4byte	.LASF61
+ 1161 0221 06       		.byte	0x6
+ 1162 0222 07       		.uleb128 0x7
+ 1163 0223 38000000 		.4byte	.LASF62
+ 1164 0227 07       		.byte	0x7
+ 1165 0228 07       		.uleb128 0x7
+ 1166 0229 78000000 		.4byte	.LASF63
+ 1167 022d 08       		.byte	0x8
+ 1168 022e 07       		.uleb128 0x7
+ 1169 022f 44030000 		.4byte	.LASF64
+ 1170 0233 09       		.byte	0x9
+ 1171 0234 07       		.uleb128 0x7
+ 1172 0235 56050000 		.4byte	.LASF65
+ 1173 0239 0A       		.byte	0xa
+ 1174 023a 00       		.byte	0
+ 1175 023b 03       		.uleb128 0x3
+ 1176 023c BF030000 		.4byte	.LASF66
+ 1177 0240 08       		.byte	0x8
+ 1178 0241 77       		.byte	0x77
+ 1179 0242 EC010000 		.4byte	0x1ec
+ 1180 0246 06       		.uleb128 0x6
+ 1181 0247 01       		.byte	0x1
+ 1182 0248 37000000 		.4byte	0x37
+ 1183 024c 01       		.byte	0x1
+ 1184 024d 23       		.byte	0x23
+ 1185 024e 6B020000 		.4byte	0x26b
+ 1186 0252 07       		.uleb128 0x7
+ 1187 0253 9B050000 		.4byte	.LASF67
+ 1188 0257 00       		.byte	0
+ 1189 0258 07       		.uleb128 0x7
+ 1190 0259 60000000 		.4byte	.LASF68
+ 1191 025d 01       		.byte	0x1
+ 1192 025e 07       		.uleb128 0x7
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 28
+
+
+ 1193 025f 4A000000 		.4byte	.LASF69
+ 1194 0263 02       		.byte	0x2
+ 1195 0264 07       		.uleb128 0x7
+ 1196 0265 D4050000 		.4byte	.LASF70
+ 1197 0269 03       		.byte	0x3
+ 1198 026a 00       		.byte	0
+ 1199 026b 03       		.uleb128 0x3
+ 1200 026c 4B010000 		.4byte	.LASF71
+ 1201 0270 01       		.byte	0x1
+ 1202 0271 28       		.byte	0x28
+ 1203 0272 46020000 		.4byte	0x246
+ 1204 0276 0B       		.uleb128 0xb
+ 1205 0277 A7040000 		.4byte	.LASF72
+ 1206 027b 01       		.byte	0x1
+ 1207 027c 47       		.byte	0x47
+ 1208 027d 45000000 		.4byte	0x45
+ 1209 0281 00000000 		.4byte	.LFB111
+ 1210 0285 2C000000 		.4byte	.LFE111-.LFB111
+ 1211 0289 01       		.uleb128 0x1
+ 1212 028a 9C       		.byte	0x9c
+ 1213 028b A6020000 		.4byte	0x2a6
+ 1214 028f 0C       		.uleb128 0xc
+ 1215 0290 2E010000 		.4byte	.LASF74
+ 1216 0294 01       		.byte	0x1
+ 1217 0295 48       		.byte	0x48
+ 1218 0296 45000000 		.4byte	0x45
+ 1219 029a 01       		.uleb128 0x1
+ 1220 029b 50       		.byte	0x50
+ 1221 029c 0D       		.uleb128 0xd
+ 1222 029d 06000000 		.4byte	.LVL0
+ 1223 02a1 F70A0000 		.4byte	0xaf7
+ 1224 02a5 00       		.byte	0
+ 1225 02a6 0B       		.uleb128 0xb
+ 1226 02a7 DF030000 		.4byte	.LASF73
+ 1227 02ab 01       		.byte	0x1
+ 1228 02ac 4C       		.byte	0x4c
+ 1229 02ad B5010000 		.4byte	0x1b5
+ 1230 02b1 00000000 		.4byte	.LFB112
+ 1231 02b5 78000000 		.4byte	.LFE112-.LFB112
+ 1232 02b9 01       		.uleb128 0x1
+ 1233 02ba 9C       		.byte	0x9c
+ 1234 02bb 7A030000 		.4byte	0x37a
+ 1235 02bf 0E       		.uleb128 0xe
+ 1236 02c0 8D040000 		.4byte	.LASF77
+ 1237 02c4 01       		.byte	0x1
+ 1238 02c5 4E       		.byte	0x4e
+ 1239 02c6 7A030000 		.4byte	0x37a
+ 1240 02ca 0F       		.uleb128 0xf
+ 1241 02cb 5B020000 		.4byte	.LASF75
+ 1242 02cf 01       		.byte	0x1
+ 1243 02d0 4F       		.byte	0x4f
+ 1244 02d1 8C000000 		.4byte	0x8c
+ 1245 02d5 00000000 		.4byte	.LLST0
+ 1246 02d9 10       		.uleb128 0x10
+ 1247 02da 08000000 		.4byte	.LVL2
+ 1248 02de 020B0000 		.4byte	0xb02
+ 1249 02e2 EC020000 		.4byte	0x2ec
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 29
+
+
+ 1250 02e6 11       		.uleb128 0x11
+ 1251 02e7 01       		.uleb128 0x1
+ 1252 02e8 50       		.byte	0x50
+ 1253 02e9 01       		.uleb128 0x1
+ 1254 02ea 31       		.byte	0x31
+ 1255 02eb 00       		.byte	0
+ 1256 02ec 10       		.uleb128 0x10
+ 1257 02ed 0E000000 		.4byte	.LVL3
+ 1258 02f1 0D0B0000 		.4byte	0xb0d
+ 1259 02f5 00030000 		.4byte	0x300
+ 1260 02f9 11       		.uleb128 0x11
+ 1261 02fa 01       		.uleb128 0x1
+ 1262 02fb 50       		.byte	0x50
+ 1263 02fc 02       		.uleb128 0x2
+ 1264 02fd 08       		.byte	0x8
+ 1265 02fe 3F       		.byte	0x3f
+ 1266 02ff 00       		.byte	0
+ 1267 0300 0D       		.uleb128 0xd
+ 1268 0301 12000000 		.4byte	.LVL4
+ 1269 0305 F70A0000 		.4byte	0xaf7
+ 1270 0309 10       		.uleb128 0x10
+ 1271 030a 2C000000 		.4byte	.LVL5
+ 1272 030e 020B0000 		.4byte	0xb02
+ 1273 0312 1C030000 		.4byte	0x31c
+ 1274 0316 11       		.uleb128 0x11
+ 1275 0317 01       		.uleb128 0x1
+ 1276 0318 50       		.byte	0x50
+ 1277 0319 01       		.uleb128 0x1
+ 1278 031a 30       		.byte	0x30
+ 1279 031b 00       		.byte	0
+ 1280 031c 10       		.uleb128 0x10
+ 1281 031d 38000000 		.4byte	.LVL7
+ 1282 0321 0D0B0000 		.4byte	0xb0d
+ 1283 0325 2F030000 		.4byte	0x32f
+ 1284 0329 11       		.uleb128 0x11
+ 1285 032a 01       		.uleb128 0x1
+ 1286 032b 50       		.byte	0x50
+ 1287 032c 01       		.uleb128 0x1
+ 1288 032d 36       		.byte	0x36
+ 1289 032e 00       		.byte	0
+ 1290 032f 10       		.uleb128 0x10
+ 1291 0330 48000000 		.4byte	.LVL8
+ 1292 0334 180B0000 		.4byte	0xb18
+ 1293 0338 4C030000 		.4byte	0x34c
+ 1294 033c 11       		.uleb128 0x11
+ 1295 033d 01       		.uleb128 0x1
+ 1296 033e 50       		.byte	0x50
+ 1297 033f 01       		.uleb128 0x1
+ 1298 0340 32       		.byte	0x32
+ 1299 0341 11       		.uleb128 0x11
+ 1300 0342 01       		.uleb128 0x1
+ 1301 0343 51       		.byte	0x51
+ 1302 0344 01       		.uleb128 0x1
+ 1303 0345 31       		.byte	0x31
+ 1304 0346 11       		.uleb128 0x11
+ 1305 0347 01       		.uleb128 0x1
+ 1306 0348 52       		.byte	0x52
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 30
+
+
+ 1307 0349 01       		.uleb128 0x1
+ 1308 034a 31       		.byte	0x31
+ 1309 034b 00       		.byte	0
+ 1310 034c 10       		.uleb128 0x10
+ 1311 034d 56000000 		.4byte	.LVL11
+ 1312 0351 0D0B0000 		.4byte	0xb0d
+ 1313 0355 60030000 		.4byte	0x360
+ 1314 0359 11       		.uleb128 0x11
+ 1315 035a 01       		.uleb128 0x1
+ 1316 035b 50       		.byte	0x50
+ 1317 035c 02       		.uleb128 0x2
+ 1318 035d 08       		.byte	0x8
+ 1319 035e 5B       		.byte	0x5b
+ 1320 035f 00       		.byte	0
+ 1321 0360 12       		.uleb128 0x12
+ 1322 0361 66000000 		.4byte	.LVL12
+ 1323 0365 180B0000 		.4byte	0xb18
+ 1324 0369 11       		.uleb128 0x11
+ 1325 036a 01       		.uleb128 0x1
+ 1326 036b 50       		.byte	0x50
+ 1327 036c 01       		.uleb128 0x1
+ 1328 036d 32       		.byte	0x32
+ 1329 036e 11       		.uleb128 0x11
+ 1330 036f 01       		.uleb128 0x1
+ 1331 0370 51       		.byte	0x51
+ 1332 0371 01       		.uleb128 0x1
+ 1333 0372 31       		.byte	0x31
+ 1334 0373 11       		.uleb128 0x11
+ 1335 0374 01       		.uleb128 0x1
+ 1336 0375 52       		.byte	0x52
+ 1337 0376 01       		.uleb128 0x1
+ 1338 0377 31       		.byte	0x31
+ 1339 0378 00       		.byte	0
+ 1340 0379 00       		.byte	0
+ 1341 037a 13       		.uleb128 0x13
+ 1342 037b BB000000 		.4byte	0xbb
+ 1343 037f 8A030000 		.4byte	0x38a
+ 1344 0383 14       		.uleb128 0x14
+ 1345 0384 00010000 		.4byte	0x100
+ 1346 0388 7F       		.byte	0x7f
+ 1347 0389 00       		.byte	0
+ 1348 038a 15       		.uleb128 0x15
+ 1349 038b 8C010000 		.4byte	.LASF76
+ 1350 038f 01       		.byte	0x1
+ 1351 0390 A8       		.byte	0xa8
+ 1352 0391 00000000 		.4byte	.LFB114
+ 1353 0395 98020000 		.4byte	.LFE114-.LFB114
+ 1354 0399 01       		.uleb128 0x1
+ 1355 039a 9C       		.byte	0x9c
+ 1356 039b 5C080000 		.4byte	0x85c
+ 1357 039f 16       		.uleb128 0x16
+ 1358 03a0 657600   		.ascii	"ev\000"
+ 1359 03a3 01       		.byte	0x1
+ 1360 03a4 A8       		.byte	0xa8
+ 1361 03a5 3B020000 		.4byte	0x23b
+ 1362 03a9 48000000 		.4byte	.LLST1
+ 1363 03ad 0C       		.uleb128 0xc
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 31
+
+
+ 1364 03ae 8D040000 		.4byte	.LASF77
+ 1365 03b2 01       		.byte	0x1
+ 1366 03b3 A9       		.byte	0xa9
+ 1367 03b4 7A030000 		.4byte	0x37a
+ 1368 03b8 03       		.uleb128 0x3
+ 1369 03b9 91       		.byte	0x91
+ 1370 03ba F07E     		.sleb128 -144
+ 1371 03bc 10       		.uleb128 0x10
+ 1372 03bd 10000000 		.4byte	.LVL16
+ 1373 03c1 240B0000 		.4byte	0xb24
+ 1374 03c5 DB030000 		.4byte	0x3db
+ 1375 03c9 11       		.uleb128 0x11
+ 1376 03ca 01       		.uleb128 0x1
+ 1377 03cb 50       		.byte	0x50
+ 1378 03cc 02       		.uleb128 0x2
+ 1379 03cd 7D       		.byte	0x7d
+ 1380 03ce 00       		.sleb128 0
+ 1381 03cf 11       		.uleb128 0x11
+ 1382 03d0 01       		.uleb128 0x1
+ 1383 03d1 51       		.byte	0x51
+ 1384 03d2 01       		.uleb128 0x1
+ 1385 03d3 30       		.byte	0x30
+ 1386 03d4 11       		.uleb128 0x11
+ 1387 03d5 01       		.uleb128 0x1
+ 1388 03d6 52       		.byte	0x52
+ 1389 03d7 02       		.uleb128 0x2
+ 1390 03d8 08       		.byte	0x8
+ 1391 03d9 80       		.byte	0x80
+ 1392 03da 00       		.byte	0
+ 1393 03db 10       		.uleb128 0x10
+ 1394 03dc 3E000000 		.4byte	.LVL17
+ 1395 03e0 2D0B0000 		.4byte	0xb2d
+ 1396 03e4 EE030000 		.4byte	0x3ee
+ 1397 03e8 11       		.uleb128 0x11
+ 1398 03e9 01       		.uleb128 0x1
+ 1399 03ea 50       		.byte	0x50
+ 1400 03eb 01       		.uleb128 0x1
+ 1401 03ec 32       		.byte	0x32
+ 1402 03ed 00       		.byte	0
+ 1403 03ee 10       		.uleb128 0x10
+ 1404 03ef 4E000000 		.4byte	.LVL18
+ 1405 03f3 390B0000 		.4byte	0xb39
+ 1406 03f7 02040000 		.4byte	0x402
+ 1407 03fb 11       		.uleb128 0x11
+ 1408 03fc 01       		.uleb128 0x1
+ 1409 03fd 50       		.byte	0x50
+ 1410 03fe 02       		.uleb128 0x2
+ 1411 03ff 7D       		.byte	0x7d
+ 1412 0400 00       		.sleb128 0
+ 1413 0401 00       		.byte	0
+ 1414 0402 10       		.uleb128 0x10
+ 1415 0403 58000000 		.4byte	.LVL19
+ 1416 0407 440B0000 		.4byte	0xb44
+ 1417 040b 1F040000 		.4byte	0x41f
+ 1418 040f 11       		.uleb128 0x11
+ 1419 0410 01       		.uleb128 0x1
+ 1420 0411 51       		.byte	0x51
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 32
+
+
+ 1421 0412 05       		.uleb128 0x5
+ 1422 0413 03       		.byte	0x3
+ 1423 0414 00000000 		.4byte	.LC0
+ 1424 0418 11       		.uleb128 0x11
+ 1425 0419 01       		.uleb128 0x1
+ 1426 041a 52       		.byte	0x52
+ 1427 041b 02       		.uleb128 0x2
+ 1428 041c 74       		.byte	0x74
+ 1429 041d 00       		.sleb128 0
+ 1430 041e 00       		.byte	0
+ 1431 041f 10       		.uleb128 0x10
+ 1432 0420 5E000000 		.4byte	.LVL20
+ 1433 0424 390B0000 		.4byte	0xb39
+ 1434 0428 33040000 		.4byte	0x433
+ 1435 042c 11       		.uleb128 0x11
+ 1436 042d 01       		.uleb128 0x1
+ 1437 042e 50       		.byte	0x50
+ 1438 042f 02       		.uleb128 0x2
+ 1439 0430 7D       		.byte	0x7d
+ 1440 0431 00       		.sleb128 0
+ 1441 0432 00       		.byte	0
+ 1442 0433 10       		.uleb128 0x10
+ 1443 0434 68000000 		.4byte	.LVL21
+ 1444 0438 440B0000 		.4byte	0xb44
+ 1445 043c 53040000 		.4byte	0x453
+ 1446 0440 11       		.uleb128 0x11
+ 1447 0441 01       		.uleb128 0x1
+ 1448 0442 51       		.byte	0x51
+ 1449 0443 05       		.uleb128 0x5
+ 1450 0444 03       		.byte	0x3
+ 1451 0445 34000000 		.4byte	.LC2
+ 1452 0449 11       		.uleb128 0x11
+ 1453 044a 01       		.uleb128 0x1
+ 1454 044b 52       		.byte	0x52
+ 1455 044c 05       		.uleb128 0x5
+ 1456 044d 03       		.byte	0x3
+ 1457 044e 14000000 		.4byte	.LC1
+ 1458 0452 00       		.byte	0
+ 1459 0453 10       		.uleb128 0x10
+ 1460 0454 78000000 		.4byte	.LVL22
+ 1461 0458 390B0000 		.4byte	0xb39
+ 1462 045c 67040000 		.4byte	0x467
+ 1463 0460 11       		.uleb128 0x11
+ 1464 0461 01       		.uleb128 0x1
+ 1465 0462 50       		.byte	0x50
+ 1466 0463 02       		.uleb128 0x2
+ 1467 0464 7D       		.byte	0x7d
+ 1468 0465 00       		.sleb128 0
+ 1469 0466 00       		.byte	0
+ 1470 0467 10       		.uleb128 0x10
+ 1471 0468 82000000 		.4byte	.LVL23
+ 1472 046c 440B0000 		.4byte	0xb44
+ 1473 0470 84040000 		.4byte	0x484
+ 1474 0474 11       		.uleb128 0x11
+ 1475 0475 01       		.uleb128 0x1
+ 1476 0476 51       		.byte	0x51
+ 1477 0477 05       		.uleb128 0x5
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 33
+
+
+ 1478 0478 03       		.byte	0x3
+ 1479 0479 3C000000 		.4byte	.LC3
+ 1480 047d 11       		.uleb128 0x11
+ 1481 047e 01       		.uleb128 0x1
+ 1482 047f 52       		.byte	0x52
+ 1483 0480 02       		.uleb128 0x2
+ 1484 0481 74       		.byte	0x74
+ 1485 0482 00       		.sleb128 0
+ 1486 0483 00       		.byte	0
+ 1487 0484 10       		.uleb128 0x10
+ 1488 0485 90000000 		.4byte	.LVL24
+ 1489 0489 390B0000 		.4byte	0xb39
+ 1490 048d 98040000 		.4byte	0x498
+ 1491 0491 11       		.uleb128 0x11
+ 1492 0492 01       		.uleb128 0x1
+ 1493 0493 50       		.byte	0x50
+ 1494 0494 02       		.uleb128 0x2
+ 1495 0495 7D       		.byte	0x7d
+ 1496 0496 00       		.sleb128 0
+ 1497 0497 00       		.byte	0
+ 1498 0498 10       		.uleb128 0x10
+ 1499 0499 9A000000 		.4byte	.LVL25
+ 1500 049d 440B0000 		.4byte	0xb44
+ 1501 04a1 B5040000 		.4byte	0x4b5
+ 1502 04a5 11       		.uleb128 0x11
+ 1503 04a6 01       		.uleb128 0x1
+ 1504 04a7 51       		.byte	0x51
+ 1505 04a8 05       		.uleb128 0x5
+ 1506 04a9 03       		.byte	0x3
+ 1507 04aa 54000000 		.4byte	.LC4
+ 1508 04ae 11       		.uleb128 0x11
+ 1509 04af 01       		.uleb128 0x1
+ 1510 04b0 52       		.byte	0x52
+ 1511 04b1 02       		.uleb128 0x2
+ 1512 04b2 74       		.byte	0x74
+ 1513 04b3 00       		.sleb128 0
+ 1514 04b4 00       		.byte	0
+ 1515 04b5 10       		.uleb128 0x10
+ 1516 04b6 A0000000 		.4byte	.LVL26
+ 1517 04ba 4F0B0000 		.4byte	0xb4f
+ 1518 04be C9040000 		.4byte	0x4c9
+ 1519 04c2 11       		.uleb128 0x11
+ 1520 04c3 01       		.uleb128 0x1
+ 1521 04c4 50       		.byte	0x50
+ 1522 04c5 02       		.uleb128 0x2
+ 1523 04c6 7D       		.byte	0x7d
+ 1524 04c7 00       		.sleb128 0
+ 1525 04c8 00       		.byte	0
+ 1526 04c9 0D       		.uleb128 0xd
+ 1527 04ca A4000000 		.4byte	.LVL27
+ 1528 04ce 5A0B0000 		.4byte	0xb5a
+ 1529 04d2 10       		.uleb128 0x10
+ 1530 04d3 B4000000 		.4byte	.LVL28
+ 1531 04d7 5C080000 		.4byte	0x85c
+ 1532 04db E5040000 		.4byte	0x4e5
+ 1533 04df 11       		.uleb128 0x11
+ 1534 04e0 01       		.uleb128 0x1
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 34
+
+
+ 1535 04e1 50       		.byte	0x50
+ 1536 04e2 01       		.uleb128 0x1
+ 1537 04e3 38       		.byte	0x38
+ 1538 04e4 00       		.byte	0
+ 1539 04e5 10       		.uleb128 0x10
+ 1540 04e6 BE000000 		.4byte	.LVL29
+ 1541 04ea 650B0000 		.4byte	0xb65
+ 1542 04ee FD040000 		.4byte	0x4fd
+ 1543 04f2 11       		.uleb128 0x11
+ 1544 04f3 01       		.uleb128 0x1
+ 1545 04f4 50       		.byte	0x50
+ 1546 04f5 01       		.uleb128 0x1
+ 1547 04f6 32       		.byte	0x32
+ 1548 04f7 11       		.uleb128 0x11
+ 1549 04f8 01       		.uleb128 0x1
+ 1550 04f9 51       		.byte	0x51
+ 1551 04fa 01       		.uleb128 0x1
+ 1552 04fb 38       		.byte	0x38
+ 1553 04fc 00       		.byte	0
+ 1554 04fd 10       		.uleb128 0x10
+ 1555 04fe CC000000 		.4byte	.LVL30
+ 1556 0502 2D0B0000 		.4byte	0xb2d
+ 1557 0506 10050000 		.4byte	0x510
+ 1558 050a 11       		.uleb128 0x11
+ 1559 050b 01       		.uleb128 0x1
+ 1560 050c 50       		.byte	0x50
+ 1561 050d 01       		.uleb128 0x1
+ 1562 050e 32       		.byte	0x32
+ 1563 050f 00       		.byte	0
+ 1564 0510 10       		.uleb128 0x10
+ 1565 0511 DC000000 		.4byte	.LVL31
+ 1566 0515 390B0000 		.4byte	0xb39
+ 1567 0519 24050000 		.4byte	0x524
+ 1568 051d 11       		.uleb128 0x11
+ 1569 051e 01       		.uleb128 0x1
+ 1570 051f 50       		.byte	0x50
+ 1571 0520 02       		.uleb128 0x2
+ 1572 0521 7D       		.byte	0x7d
+ 1573 0522 00       		.sleb128 0
+ 1574 0523 00       		.byte	0
+ 1575 0524 10       		.uleb128 0x10
+ 1576 0525 E6000000 		.4byte	.LVL32
+ 1577 0529 440B0000 		.4byte	0xb44
+ 1578 052d 41050000 		.4byte	0x541
+ 1579 0531 11       		.uleb128 0x11
+ 1580 0532 01       		.uleb128 0x1
+ 1581 0533 51       		.byte	0x51
+ 1582 0534 05       		.uleb128 0x5
+ 1583 0535 03       		.byte	0x3
+ 1584 0536 00000000 		.4byte	.LC0
+ 1585 053a 11       		.uleb128 0x11
+ 1586 053b 01       		.uleb128 0x1
+ 1587 053c 52       		.byte	0x52
+ 1588 053d 02       		.uleb128 0x2
+ 1589 053e 74       		.byte	0x74
+ 1590 053f 00       		.sleb128 0
+ 1591 0540 00       		.byte	0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 35
+
+
+ 1592 0541 10       		.uleb128 0x10
+ 1593 0542 EC000000 		.4byte	.LVL33
+ 1594 0546 390B0000 		.4byte	0xb39
+ 1595 054a 55050000 		.4byte	0x555
+ 1596 054e 11       		.uleb128 0x11
+ 1597 054f 01       		.uleb128 0x1
+ 1598 0550 50       		.byte	0x50
+ 1599 0551 02       		.uleb128 0x2
+ 1600 0552 7D       		.byte	0x7d
+ 1601 0553 00       		.sleb128 0
+ 1602 0554 00       		.byte	0
+ 1603 0555 10       		.uleb128 0x10
+ 1604 0556 F6000000 		.4byte	.LVL34
+ 1605 055a 440B0000 		.4byte	0xb44
+ 1606 055e 75050000 		.4byte	0x575
+ 1607 0562 11       		.uleb128 0x11
+ 1608 0563 01       		.uleb128 0x1
+ 1609 0564 51       		.byte	0x51
+ 1610 0565 05       		.uleb128 0x5
+ 1611 0566 03       		.byte	0x3
+ 1612 0567 34000000 		.4byte	.LC2
+ 1613 056b 11       		.uleb128 0x11
+ 1614 056c 01       		.uleb128 0x1
+ 1615 056d 52       		.byte	0x52
+ 1616 056e 05       		.uleb128 0x5
+ 1617 056f 03       		.byte	0x3
+ 1618 0570 74000000 		.4byte	.LC5
+ 1619 0574 00       		.byte	0
+ 1620 0575 10       		.uleb128 0x10
+ 1621 0576 FC000000 		.4byte	.LVL35
+ 1622 057a 4F0B0000 		.4byte	0xb4f
+ 1623 057e 89050000 		.4byte	0x589
+ 1624 0582 11       		.uleb128 0x11
+ 1625 0583 01       		.uleb128 0x1
+ 1626 0584 50       		.byte	0x50
+ 1627 0585 02       		.uleb128 0x2
+ 1628 0586 7D       		.byte	0x7d
+ 1629 0587 00       		.sleb128 0
+ 1630 0588 00       		.byte	0
+ 1631 0589 0D       		.uleb128 0xd
+ 1632 058a 00010000 		.4byte	.LVL36
+ 1633 058e 5A0B0000 		.4byte	0xb5a
+ 1634 0592 10       		.uleb128 0x10
+ 1635 0593 10010000 		.4byte	.LVL37
+ 1636 0597 5C080000 		.4byte	0x85c
+ 1637 059b A5050000 		.4byte	0x5a5
+ 1638 059f 11       		.uleb128 0x11
+ 1639 05a0 01       		.uleb128 0x1
+ 1640 05a1 50       		.byte	0x50
+ 1641 05a2 01       		.uleb128 0x1
+ 1642 05a3 38       		.byte	0x38
+ 1643 05a4 00       		.byte	0
+ 1644 05a5 10       		.uleb128 0x10
+ 1645 05a6 1A010000 		.4byte	.LVL38
+ 1646 05aa 650B0000 		.4byte	0xb65
+ 1647 05ae BD050000 		.4byte	0x5bd
+ 1648 05b2 11       		.uleb128 0x11
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 36
+
+
+ 1649 05b3 01       		.uleb128 0x1
+ 1650 05b4 50       		.byte	0x50
+ 1651 05b5 01       		.uleb128 0x1
+ 1652 05b6 32       		.byte	0x32
+ 1653 05b7 11       		.uleb128 0x11
+ 1654 05b8 01       		.uleb128 0x1
+ 1655 05b9 51       		.byte	0x51
+ 1656 05ba 01       		.uleb128 0x1
+ 1657 05bb 38       		.byte	0x38
+ 1658 05bc 00       		.byte	0
+ 1659 05bd 10       		.uleb128 0x10
+ 1660 05be 30010000 		.4byte	.LVL39
+ 1661 05c2 2D0B0000 		.4byte	0xb2d
+ 1662 05c6 D0050000 		.4byte	0x5d0
+ 1663 05ca 11       		.uleb128 0x11
+ 1664 05cb 01       		.uleb128 0x1
+ 1665 05cc 50       		.byte	0x50
+ 1666 05cd 01       		.uleb128 0x1
+ 1667 05ce 32       		.byte	0x32
+ 1668 05cf 00       		.byte	0
+ 1669 05d0 10       		.uleb128 0x10
+ 1670 05d1 40010000 		.4byte	.LVL40
+ 1671 05d5 390B0000 		.4byte	0xb39
+ 1672 05d9 E4050000 		.4byte	0x5e4
+ 1673 05dd 11       		.uleb128 0x11
+ 1674 05de 01       		.uleb128 0x1
+ 1675 05df 50       		.byte	0x50
+ 1676 05e0 02       		.uleb128 0x2
+ 1677 05e1 7D       		.byte	0x7d
+ 1678 05e2 00       		.sleb128 0
+ 1679 05e3 00       		.byte	0
+ 1680 05e4 10       		.uleb128 0x10
+ 1681 05e5 4A010000 		.4byte	.LVL41
+ 1682 05e9 440B0000 		.4byte	0xb44
+ 1683 05ed 01060000 		.4byte	0x601
+ 1684 05f1 11       		.uleb128 0x11
+ 1685 05f2 01       		.uleb128 0x1
+ 1686 05f3 51       		.byte	0x51
+ 1687 05f4 05       		.uleb128 0x5
+ 1688 05f5 03       		.byte	0x3
+ 1689 05f6 00000000 		.4byte	.LC0
+ 1690 05fa 11       		.uleb128 0x11
+ 1691 05fb 01       		.uleb128 0x1
+ 1692 05fc 52       		.byte	0x52
+ 1693 05fd 02       		.uleb128 0x2
+ 1694 05fe 74       		.byte	0x74
+ 1695 05ff 00       		.sleb128 0
+ 1696 0600 00       		.byte	0
+ 1697 0601 10       		.uleb128 0x10
+ 1698 0602 50010000 		.4byte	.LVL42
+ 1699 0606 390B0000 		.4byte	0xb39
+ 1700 060a 15060000 		.4byte	0x615
+ 1701 060e 11       		.uleb128 0x11
+ 1702 060f 01       		.uleb128 0x1
+ 1703 0610 50       		.byte	0x50
+ 1704 0611 02       		.uleb128 0x2
+ 1705 0612 7D       		.byte	0x7d
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 37
+
+
+ 1706 0613 00       		.sleb128 0
+ 1707 0614 00       		.byte	0
+ 1708 0615 10       		.uleb128 0x10
+ 1709 0616 5A010000 		.4byte	.LVL43
+ 1710 061a 440B0000 		.4byte	0xb44
+ 1711 061e 35060000 		.4byte	0x635
+ 1712 0622 11       		.uleb128 0x11
+ 1713 0623 01       		.uleb128 0x1
+ 1714 0624 51       		.byte	0x51
+ 1715 0625 05       		.uleb128 0x5
+ 1716 0626 03       		.byte	0x3
+ 1717 0627 34000000 		.4byte	.LC2
+ 1718 062b 11       		.uleb128 0x11
+ 1719 062c 01       		.uleb128 0x1
+ 1720 062d 52       		.byte	0x52
+ 1721 062e 05       		.uleb128 0x5
+ 1722 062f 03       		.byte	0x3
+ 1723 0630 14000000 		.4byte	.LC1
+ 1724 0634 00       		.byte	0
+ 1725 0635 10       		.uleb128 0x10
+ 1726 0636 6A010000 		.4byte	.LVL44
+ 1727 063a 390B0000 		.4byte	0xb39
+ 1728 063e 49060000 		.4byte	0x649
+ 1729 0642 11       		.uleb128 0x11
+ 1730 0643 01       		.uleb128 0x1
+ 1731 0644 50       		.byte	0x50
+ 1732 0645 02       		.uleb128 0x2
+ 1733 0646 7D       		.byte	0x7d
+ 1734 0647 00       		.sleb128 0
+ 1735 0648 00       		.byte	0
+ 1736 0649 10       		.uleb128 0x10
+ 1737 064a 74010000 		.4byte	.LVL45
+ 1738 064e 440B0000 		.4byte	0xb44
+ 1739 0652 66060000 		.4byte	0x666
+ 1740 0656 11       		.uleb128 0x11
+ 1741 0657 01       		.uleb128 0x1
+ 1742 0658 51       		.byte	0x51
+ 1743 0659 05       		.uleb128 0x5
+ 1744 065a 03       		.byte	0x3
+ 1745 065b 3C000000 		.4byte	.LC3
+ 1746 065f 11       		.uleb128 0x11
+ 1747 0660 01       		.uleb128 0x1
+ 1748 0661 52       		.byte	0x52
+ 1749 0662 02       		.uleb128 0x2
+ 1750 0663 74       		.byte	0x74
+ 1751 0664 00       		.sleb128 0
+ 1752 0665 00       		.byte	0
+ 1753 0666 10       		.uleb128 0x10
+ 1754 0667 82010000 		.4byte	.LVL46
+ 1755 066b 390B0000 		.4byte	0xb39
+ 1756 066f 7A060000 		.4byte	0x67a
+ 1757 0673 11       		.uleb128 0x11
+ 1758 0674 01       		.uleb128 0x1
+ 1759 0675 50       		.byte	0x50
+ 1760 0676 02       		.uleb128 0x2
+ 1761 0677 7D       		.byte	0x7d
+ 1762 0678 00       		.sleb128 0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 38
+
+
+ 1763 0679 00       		.byte	0
+ 1764 067a 10       		.uleb128 0x10
+ 1765 067b 8C010000 		.4byte	.LVL47
+ 1766 067f 440B0000 		.4byte	0xb44
+ 1767 0683 97060000 		.4byte	0x697
+ 1768 0687 11       		.uleb128 0x11
+ 1769 0688 01       		.uleb128 0x1
+ 1770 0689 51       		.byte	0x51
+ 1771 068a 05       		.uleb128 0x5
+ 1772 068b 03       		.byte	0x3
+ 1773 068c 54000000 		.4byte	.LC4
+ 1774 0690 11       		.uleb128 0x11
+ 1775 0691 01       		.uleb128 0x1
+ 1776 0692 52       		.byte	0x52
+ 1777 0693 02       		.uleb128 0x2
+ 1778 0694 74       		.byte	0x74
+ 1779 0695 00       		.sleb128 0
+ 1780 0696 00       		.byte	0
+ 1781 0697 10       		.uleb128 0x10
+ 1782 0698 92010000 		.4byte	.LVL48
+ 1783 069c 4F0B0000 		.4byte	0xb4f
+ 1784 06a0 AB060000 		.4byte	0x6ab
+ 1785 06a4 11       		.uleb128 0x11
+ 1786 06a5 01       		.uleb128 0x1
+ 1787 06a6 50       		.byte	0x50
+ 1788 06a7 02       		.uleb128 0x2
+ 1789 06a8 7D       		.byte	0x7d
+ 1790 06a9 00       		.sleb128 0
+ 1791 06aa 00       		.byte	0
+ 1792 06ab 0D       		.uleb128 0xd
+ 1793 06ac 96010000 		.4byte	.LVL49
+ 1794 06b0 5A0B0000 		.4byte	0xb5a
+ 1795 06b4 10       		.uleb128 0x10
+ 1796 06b5 A6010000 		.4byte	.LVL50
+ 1797 06b9 5C080000 		.4byte	0x85c
+ 1798 06bd C7060000 		.4byte	0x6c7
+ 1799 06c1 11       		.uleb128 0x11
+ 1800 06c2 01       		.uleb128 0x1
+ 1801 06c3 50       		.byte	0x50
+ 1802 06c4 01       		.uleb128 0x1
+ 1803 06c5 38       		.byte	0x38
+ 1804 06c6 00       		.byte	0
+ 1805 06c7 10       		.uleb128 0x10
+ 1806 06c8 B0010000 		.4byte	.LVL51
+ 1807 06cc 650B0000 		.4byte	0xb65
+ 1808 06d0 DF060000 		.4byte	0x6df
+ 1809 06d4 11       		.uleb128 0x11
+ 1810 06d5 01       		.uleb128 0x1
+ 1811 06d6 50       		.byte	0x50
+ 1812 06d7 01       		.uleb128 0x1
+ 1813 06d8 32       		.byte	0x32
+ 1814 06d9 11       		.uleb128 0x11
+ 1815 06da 01       		.uleb128 0x1
+ 1816 06db 51       		.byte	0x51
+ 1817 06dc 01       		.uleb128 0x1
+ 1818 06dd 38       		.byte	0x38
+ 1819 06de 00       		.byte	0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 39
+
+
+ 1820 06df 10       		.uleb128 0x10
+ 1821 06e0 BE010000 		.4byte	.LVL52
+ 1822 06e4 2D0B0000 		.4byte	0xb2d
+ 1823 06e8 F2060000 		.4byte	0x6f2
+ 1824 06ec 11       		.uleb128 0x11
+ 1825 06ed 01       		.uleb128 0x1
+ 1826 06ee 50       		.byte	0x50
+ 1827 06ef 01       		.uleb128 0x1
+ 1828 06f0 32       		.byte	0x32
+ 1829 06f1 00       		.byte	0
+ 1830 06f2 10       		.uleb128 0x10
+ 1831 06f3 CE010000 		.4byte	.LVL53
+ 1832 06f7 390B0000 		.4byte	0xb39
+ 1833 06fb 06070000 		.4byte	0x706
+ 1834 06ff 11       		.uleb128 0x11
+ 1835 0700 01       		.uleb128 0x1
+ 1836 0701 50       		.byte	0x50
+ 1837 0702 02       		.uleb128 0x2
+ 1838 0703 7D       		.byte	0x7d
+ 1839 0704 00       		.sleb128 0
+ 1840 0705 00       		.byte	0
+ 1841 0706 10       		.uleb128 0x10
+ 1842 0707 D8010000 		.4byte	.LVL54
+ 1843 070b 440B0000 		.4byte	0xb44
+ 1844 070f 23070000 		.4byte	0x723
+ 1845 0713 11       		.uleb128 0x11
+ 1846 0714 01       		.uleb128 0x1
+ 1847 0715 51       		.byte	0x51
+ 1848 0716 05       		.uleb128 0x5
+ 1849 0717 03       		.byte	0x3
+ 1850 0718 00000000 		.4byte	.LC0
+ 1851 071c 11       		.uleb128 0x11
+ 1852 071d 01       		.uleb128 0x1
+ 1853 071e 52       		.byte	0x52
+ 1854 071f 02       		.uleb128 0x2
+ 1855 0720 74       		.byte	0x74
+ 1856 0721 00       		.sleb128 0
+ 1857 0722 00       		.byte	0
+ 1858 0723 10       		.uleb128 0x10
+ 1859 0724 DE010000 		.4byte	.LVL55
+ 1860 0728 390B0000 		.4byte	0xb39
+ 1861 072c 37070000 		.4byte	0x737
+ 1862 0730 11       		.uleb128 0x11
+ 1863 0731 01       		.uleb128 0x1
+ 1864 0732 50       		.byte	0x50
+ 1865 0733 02       		.uleb128 0x2
+ 1866 0734 7D       		.byte	0x7d
+ 1867 0735 00       		.sleb128 0
+ 1868 0736 00       		.byte	0
+ 1869 0737 10       		.uleb128 0x10
+ 1870 0738 E8010000 		.4byte	.LVL56
+ 1871 073c 440B0000 		.4byte	0xb44
+ 1872 0740 57070000 		.4byte	0x757
+ 1873 0744 11       		.uleb128 0x11
+ 1874 0745 01       		.uleb128 0x1
+ 1875 0746 51       		.byte	0x51
+ 1876 0747 05       		.uleb128 0x5
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 40
+
+
+ 1877 0748 03       		.byte	0x3
+ 1878 0749 34000000 		.4byte	.LC2
+ 1879 074d 11       		.uleb128 0x11
+ 1880 074e 01       		.uleb128 0x1
+ 1881 074f 52       		.byte	0x52
+ 1882 0750 05       		.uleb128 0x5
+ 1883 0751 03       		.byte	0x3
+ 1884 0752 74000000 		.4byte	.LC5
+ 1885 0756 00       		.byte	0
+ 1886 0757 10       		.uleb128 0x10
+ 1887 0758 EE010000 		.4byte	.LVL57
+ 1888 075c 4F0B0000 		.4byte	0xb4f
+ 1889 0760 6B070000 		.4byte	0x76b
+ 1890 0764 11       		.uleb128 0x11
+ 1891 0765 01       		.uleb128 0x1
+ 1892 0766 50       		.byte	0x50
+ 1893 0767 02       		.uleb128 0x2
+ 1894 0768 7D       		.byte	0x7d
+ 1895 0769 00       		.sleb128 0
+ 1896 076a 00       		.byte	0
+ 1897 076b 0D       		.uleb128 0xd
+ 1898 076c F2010000 		.4byte	.LVL58
+ 1899 0770 5A0B0000 		.4byte	0xb5a
+ 1900 0774 10       		.uleb128 0x10
+ 1901 0775 02020000 		.4byte	.LVL59
+ 1902 0779 5C080000 		.4byte	0x85c
+ 1903 077d 87070000 		.4byte	0x787
+ 1904 0781 11       		.uleb128 0x11
+ 1905 0782 01       		.uleb128 0x1
+ 1906 0783 50       		.byte	0x50
+ 1907 0784 01       		.uleb128 0x1
+ 1908 0785 38       		.byte	0x38
+ 1909 0786 00       		.byte	0
+ 1910 0787 10       		.uleb128 0x10
+ 1911 0788 0C020000 		.4byte	.LVL60
+ 1912 078c 650B0000 		.4byte	0xb65
+ 1913 0790 9F070000 		.4byte	0x79f
+ 1914 0794 11       		.uleb128 0x11
+ 1915 0795 01       		.uleb128 0x1
+ 1916 0796 50       		.byte	0x50
+ 1917 0797 01       		.uleb128 0x1
+ 1918 0798 32       		.byte	0x32
+ 1919 0799 11       		.uleb128 0x11
+ 1920 079a 01       		.uleb128 0x1
+ 1921 079b 51       		.byte	0x51
+ 1922 079c 01       		.uleb128 0x1
+ 1923 079d 38       		.byte	0x38
+ 1924 079e 00       		.byte	0
+ 1925 079f 10       		.uleb128 0x10
+ 1926 07a0 1A020000 		.4byte	.LVL61
+ 1927 07a4 2D0B0000 		.4byte	0xb2d
+ 1928 07a8 B2070000 		.4byte	0x7b2
+ 1929 07ac 11       		.uleb128 0x11
+ 1930 07ad 01       		.uleb128 0x1
+ 1931 07ae 50       		.byte	0x50
+ 1932 07af 01       		.uleb128 0x1
+ 1933 07b0 32       		.byte	0x32
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 41
+
+
+ 1934 07b1 00       		.byte	0
+ 1935 07b2 10       		.uleb128 0x10
+ 1936 07b3 2A020000 		.4byte	.LVL62
+ 1937 07b7 390B0000 		.4byte	0xb39
+ 1938 07bb C6070000 		.4byte	0x7c6
+ 1939 07bf 11       		.uleb128 0x11
+ 1940 07c0 01       		.uleb128 0x1
+ 1941 07c1 50       		.byte	0x50
+ 1942 07c2 02       		.uleb128 0x2
+ 1943 07c3 7D       		.byte	0x7d
+ 1944 07c4 00       		.sleb128 0
+ 1945 07c5 00       		.byte	0
+ 1946 07c6 10       		.uleb128 0x10
+ 1947 07c7 34020000 		.4byte	.LVL63
+ 1948 07cb 440B0000 		.4byte	0xb44
+ 1949 07cf E3070000 		.4byte	0x7e3
+ 1950 07d3 11       		.uleb128 0x11
+ 1951 07d4 01       		.uleb128 0x1
+ 1952 07d5 51       		.byte	0x51
+ 1953 07d6 05       		.uleb128 0x5
+ 1954 07d7 03       		.byte	0x3
+ 1955 07d8 00000000 		.4byte	.LC0
+ 1956 07dc 11       		.uleb128 0x11
+ 1957 07dd 01       		.uleb128 0x1
+ 1958 07de 52       		.byte	0x52
+ 1959 07df 02       		.uleb128 0x2
+ 1960 07e0 74       		.byte	0x74
+ 1961 07e1 00       		.sleb128 0
+ 1962 07e2 00       		.byte	0
+ 1963 07e3 10       		.uleb128 0x10
+ 1964 07e4 3A020000 		.4byte	.LVL64
+ 1965 07e8 390B0000 		.4byte	0xb39
+ 1966 07ec F7070000 		.4byte	0x7f7
+ 1967 07f0 11       		.uleb128 0x11
+ 1968 07f1 01       		.uleb128 0x1
+ 1969 07f2 50       		.byte	0x50
+ 1970 07f3 02       		.uleb128 0x2
+ 1971 07f4 7D       		.byte	0x7d
+ 1972 07f5 00       		.sleb128 0
+ 1973 07f6 00       		.byte	0
+ 1974 07f7 10       		.uleb128 0x10
+ 1975 07f8 44020000 		.4byte	.LVL65
+ 1976 07fc 440B0000 		.4byte	0xb44
+ 1977 0800 17080000 		.4byte	0x817
+ 1978 0804 11       		.uleb128 0x11
+ 1979 0805 01       		.uleb128 0x1
+ 1980 0806 51       		.byte	0x51
+ 1981 0807 05       		.uleb128 0x5
+ 1982 0808 03       		.byte	0x3
+ 1983 0809 34000000 		.4byte	.LC2
+ 1984 080d 11       		.uleb128 0x11
+ 1985 080e 01       		.uleb128 0x1
+ 1986 080f 52       		.byte	0x52
+ 1987 0810 05       		.uleb128 0x5
+ 1988 0811 03       		.byte	0x3
+ 1989 0812 90000000 		.4byte	.LC6
+ 1990 0816 00       		.byte	0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 42
+
+
+ 1991 0817 10       		.uleb128 0x10
+ 1992 0818 4A020000 		.4byte	.LVL66
+ 1993 081c 4F0B0000 		.4byte	0xb4f
+ 1994 0820 2B080000 		.4byte	0x82b
+ 1995 0824 11       		.uleb128 0x11
+ 1996 0825 01       		.uleb128 0x1
+ 1997 0826 50       		.byte	0x50
+ 1998 0827 02       		.uleb128 0x2
+ 1999 0828 7D       		.byte	0x7d
+ 2000 0829 00       		.sleb128 0
+ 2001 082a 00       		.byte	0
+ 2002 082b 0D       		.uleb128 0xd
+ 2003 082c 4E020000 		.4byte	.LVL67
+ 2004 0830 5A0B0000 		.4byte	0xb5a
+ 2005 0834 10       		.uleb128 0x10
+ 2006 0835 5E020000 		.4byte	.LVL68
+ 2007 0839 5C080000 		.4byte	0x85c
+ 2008 083d 47080000 		.4byte	0x847
+ 2009 0841 11       		.uleb128 0x11
+ 2010 0842 01       		.uleb128 0x1
+ 2011 0843 50       		.byte	0x50
+ 2012 0844 01       		.uleb128 0x1
+ 2013 0845 38       		.byte	0x38
+ 2014 0846 00       		.byte	0
+ 2015 0847 12       		.uleb128 0x12
+ 2016 0848 68020000 		.4byte	.LVL69
+ 2017 084c 650B0000 		.4byte	0xb65
+ 2018 0850 11       		.uleb128 0x11
+ 2019 0851 01       		.uleb128 0x1
+ 2020 0852 50       		.byte	0x50
+ 2021 0853 01       		.uleb128 0x1
+ 2022 0854 32       		.byte	0x32
+ 2023 0855 11       		.uleb128 0x11
+ 2024 0856 01       		.uleb128 0x1
+ 2025 0857 51       		.byte	0x51
+ 2026 0858 01       		.uleb128 0x1
+ 2027 0859 38       		.byte	0x38
+ 2028 085a 00       		.byte	0
+ 2029 085b 00       		.byte	0
+ 2030 085c 17       		.uleb128 0x17
+ 2031 085d 90060000 		.4byte	.LASF78
+ 2032 0861 01       		.byte	0x1
+ 2033 0862 67       		.byte	0x67
+ 2034 0863 00000000 		.4byte	.LFB113
+ 2035 0867 30010000 		.4byte	.LFE113-.LFB113
+ 2036 086b 01       		.uleb128 0x1
+ 2037 086c 9C       		.byte	0x9c
+ 2038 086d 280A0000 		.4byte	0xa28
+ 2039 0871 16       		.uleb128 0x16
+ 2040 0872 657600   		.ascii	"ev\000"
+ 2041 0875 01       		.byte	0x1
+ 2042 0876 67       		.byte	0x67
+ 2043 0877 3B020000 		.4byte	0x23b
+ 2044 087b 69000000 		.4byte	.LLST2
+ 2045 087f 0C       		.uleb128 0xc
+ 2046 0880 8D040000 		.4byte	.LASF77
+ 2047 0884 01       		.byte	0x1
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 43
+
+
+ 2048 0885 69       		.byte	0x69
+ 2049 0886 280A0000 		.4byte	0xa28
+ 2050 088a 03       		.uleb128 0x3
+ 2051 088b 91       		.byte	0x91
+ 2052 088c B07F     		.sleb128 -80
+ 2053 088e 0F       		.uleb128 0xf
+ 2054 088f 23040000 		.4byte	.LASF79
+ 2055 0893 01       		.byte	0x1
+ 2056 0894 6A       		.byte	0x6a
+ 2057 0895 45000000 		.4byte	0x45
+ 2058 0899 EE000000 		.4byte	.LLST3
+ 2059 089d 18       		.uleb128 0x18
+ 2060 089e 14000000 		.4byte	.LBB2
+ 2061 08a2 F2000000 		.4byte	.LBE2-.LBB2
+ 2062 08a6 0F       		.uleb128 0xf
+ 2063 08a7 5B040000 		.4byte	.LASF52
+ 2064 08ab 01       		.byte	0x1
+ 2065 08ac 96       		.byte	0x96
+ 2066 08ad AD000000 		.4byte	0xad
+ 2067 08b1 0C010000 		.4byte	.LLST4
+ 2068 08b5 0D       		.uleb128 0xd
+ 2069 08b6 24000000 		.4byte	.LVL71
+ 2070 08ba 76020000 		.4byte	0x276
+ 2071 08be 10       		.uleb128 0x10
+ 2072 08bf 2E000000 		.4byte	.LVL73
+ 2073 08c3 180B0000 		.4byte	0xb18
+ 2074 08c7 D6080000 		.4byte	0x8d6
+ 2075 08cb 11       		.uleb128 0x11
+ 2076 08cc 01       		.uleb128 0x1
+ 2077 08cd 50       		.byte	0x50
+ 2078 08ce 01       		.uleb128 0x1
+ 2079 08cf 31       		.byte	0x31
+ 2080 08d0 11       		.uleb128 0x11
+ 2081 08d1 01       		.uleb128 0x1
+ 2082 08d2 52       		.byte	0x52
+ 2083 08d3 01       		.uleb128 0x1
+ 2084 08d4 30       		.byte	0x30
+ 2085 08d5 00       		.byte	0
+ 2086 08d6 0D       		.uleb128 0xd
+ 2087 08d7 46000000 		.4byte	.LVL75
+ 2088 08db 76020000 		.4byte	0x276
+ 2089 08df 10       		.uleb128 0x10
+ 2090 08e0 50000000 		.4byte	.LVL77
+ 2091 08e4 180B0000 		.4byte	0xb18
+ 2092 08e8 F7080000 		.4byte	0x8f7
+ 2093 08ec 11       		.uleb128 0x11
+ 2094 08ed 01       		.uleb128 0x1
+ 2095 08ee 50       		.byte	0x50
+ 2096 08ef 01       		.uleb128 0x1
+ 2097 08f0 31       		.byte	0x31
+ 2098 08f1 11       		.uleb128 0x11
+ 2099 08f2 01       		.uleb128 0x1
+ 2100 08f3 52       		.byte	0x52
+ 2101 08f4 01       		.uleb128 0x1
+ 2102 08f5 30       		.byte	0x30
+ 2103 08f6 00       		.byte	0
+ 2104 08f7 0D       		.uleb128 0xd
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 44
+
+
+ 2105 08f8 60000000 		.4byte	.LVL79
+ 2106 08fc 8A030000 		.4byte	0x38a
+ 2107 0900 0D       		.uleb128 0xd
+ 2108 0901 6A000000 		.4byte	.LVL81
+ 2109 0905 8A030000 		.4byte	0x38a
+ 2110 0909 10       		.uleb128 0x10
+ 2111 090a 72000000 		.4byte	.LVL84
+ 2112 090e 2D0B0000 		.4byte	0xb2d
+ 2113 0912 1C090000 		.4byte	0x91c
+ 2114 0916 11       		.uleb128 0x11
+ 2115 0917 01       		.uleb128 0x1
+ 2116 0918 50       		.byte	0x50
+ 2117 0919 01       		.uleb128 0x1
+ 2118 091a 30       		.byte	0x30
+ 2119 091b 00       		.byte	0
+ 2120 091c 10       		.uleb128 0x10
+ 2121 091d 78000000 		.4byte	.LVL85
+ 2122 0921 390B0000 		.4byte	0xb39
+ 2123 0925 30090000 		.4byte	0x930
+ 2124 0929 11       		.uleb128 0x11
+ 2125 092a 01       		.uleb128 0x1
+ 2126 092b 50       		.byte	0x50
+ 2127 092c 02       		.uleb128 0x2
+ 2128 092d 7D       		.byte	0x7d
+ 2129 092e 00       		.sleb128 0
+ 2130 092f 00       		.byte	0
+ 2131 0930 10       		.uleb128 0x10
+ 2132 0931 82000000 		.4byte	.LVL86
+ 2133 0935 440B0000 		.4byte	0xb44
+ 2134 0939 50090000 		.4byte	0x950
+ 2135 093d 11       		.uleb128 0x11
+ 2136 093e 01       		.uleb128 0x1
+ 2137 093f 51       		.byte	0x51
+ 2138 0940 05       		.uleb128 0x5
+ 2139 0941 03       		.byte	0x3
+ 2140 0942 A8000000 		.4byte	.LC8
+ 2141 0946 11       		.uleb128 0x11
+ 2142 0947 01       		.uleb128 0x1
+ 2143 0948 52       		.byte	0x52
+ 2144 0949 05       		.uleb128 0x5
+ 2145 094a 03       		.byte	0x3
+ 2146 094b 9C000000 		.4byte	.LC7
+ 2147 094f 00       		.byte	0
+ 2148 0950 10       		.uleb128 0x10
+ 2149 0951 88000000 		.4byte	.LVL87
+ 2150 0955 390B0000 		.4byte	0xb39
+ 2151 0959 64090000 		.4byte	0x964
+ 2152 095d 11       		.uleb128 0x11
+ 2153 095e 01       		.uleb128 0x1
+ 2154 095f 50       		.byte	0x50
+ 2155 0960 02       		.uleb128 0x2
+ 2156 0961 7D       		.byte	0x7d
+ 2157 0962 00       		.sleb128 0
+ 2158 0963 00       		.byte	0
+ 2159 0964 10       		.uleb128 0x10
+ 2160 0965 94000000 		.4byte	.LVL88
+ 2161 0969 440B0000 		.4byte	0xb44
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 45
+
+
+ 2162 096d 7B090000 		.4byte	0x97b
+ 2163 0971 11       		.uleb128 0x11
+ 2164 0972 01       		.uleb128 0x1
+ 2165 0973 51       		.byte	0x51
+ 2166 0974 05       		.uleb128 0x5
+ 2167 0975 03       		.byte	0x3
+ 2168 0976 B0000000 		.4byte	.LC9
+ 2169 097a 00       		.byte	0
+ 2170 097b 10       		.uleb128 0x10
+ 2171 097c 9A000000 		.4byte	.LVL89
+ 2172 0980 390B0000 		.4byte	0xb39
+ 2173 0984 8F090000 		.4byte	0x98f
+ 2174 0988 11       		.uleb128 0x11
+ 2175 0989 01       		.uleb128 0x1
+ 2176 098a 50       		.byte	0x50
+ 2177 098b 02       		.uleb128 0x2
+ 2178 098c 7D       		.byte	0x7d
+ 2179 098d 00       		.sleb128 0
+ 2180 098e 00       		.byte	0
+ 2181 098f 10       		.uleb128 0x10
+ 2182 0990 A4000000 		.4byte	.LVL90
+ 2183 0994 440B0000 		.4byte	0xb44
+ 2184 0998 A6090000 		.4byte	0x9a6
+ 2185 099c 11       		.uleb128 0x11
+ 2186 099d 01       		.uleb128 0x1
+ 2187 099e 51       		.byte	0x51
+ 2188 099f 05       		.uleb128 0x5
+ 2189 09a0 03       		.byte	0x3
+ 2190 09a1 D0000000 		.4byte	.LC10
+ 2191 09a5 00       		.byte	0
+ 2192 09a6 10       		.uleb128 0x10
+ 2193 09a7 B8000000 		.4byte	.LVL95
+ 2194 09ab 390B0000 		.4byte	0xb39
+ 2195 09af BA090000 		.4byte	0x9ba
+ 2196 09b3 11       		.uleb128 0x11
+ 2197 09b4 01       		.uleb128 0x1
+ 2198 09b5 50       		.byte	0x50
+ 2199 09b6 02       		.uleb128 0x2
+ 2200 09b7 7D       		.byte	0x7d
+ 2201 09b8 00       		.sleb128 0
+ 2202 09b9 00       		.byte	0
+ 2203 09ba 10       		.uleb128 0x10
+ 2204 09bb E6000000 		.4byte	.LVL101
+ 2205 09bf 440B0000 		.4byte	0xb44
+ 2206 09c3 E3090000 		.4byte	0x9e3
+ 2207 09c7 11       		.uleb128 0x11
+ 2208 09c8 01       		.uleb128 0x1
+ 2209 09c9 50       		.byte	0x50
+ 2210 09ca 08       		.uleb128 0x8
+ 2211 09cb 91       		.byte	0x91
+ 2212 09cc 00       		.sleb128 0
+ 2213 09cd 75       		.byte	0x75
+ 2214 09ce 00       		.sleb128 0
+ 2215 09cf 22       		.byte	0x22
+ 2216 09d0 08       		.byte	0x8
+ 2217 09d1 50       		.byte	0x50
+ 2218 09d2 1C       		.byte	0x1c
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 46
+
+
+ 2219 09d3 11       		.uleb128 0x11
+ 2220 09d4 01       		.uleb128 0x1
+ 2221 09d5 51       		.byte	0x51
+ 2222 09d6 05       		.uleb128 0x5
+ 2223 09d7 03       		.byte	0x3
+ 2224 09d8 E8000000 		.4byte	.LC11
+ 2225 09dc 11       		.uleb128 0x11
+ 2226 09dd 01       		.uleb128 0x1
+ 2227 09de 52       		.byte	0x52
+ 2228 09df 02       		.uleb128 0x2
+ 2229 09e0 76       		.byte	0x76
+ 2230 09e1 00       		.sleb128 0
+ 2231 09e2 00       		.byte	0
+ 2232 09e3 10       		.uleb128 0x10
+ 2233 09e4 EC000000 		.4byte	.LVL102
+ 2234 09e8 4F0B0000 		.4byte	0xb4f
+ 2235 09ec F7090000 		.4byte	0x9f7
+ 2236 09f0 11       		.uleb128 0x11
+ 2237 09f1 01       		.uleb128 0x1
+ 2238 09f2 50       		.byte	0x50
+ 2239 09f3 02       		.uleb128 0x2
+ 2240 09f4 7D       		.byte	0x7d
+ 2241 09f5 00       		.sleb128 0
+ 2242 09f6 00       		.byte	0
+ 2243 09f7 0D       		.uleb128 0xd
+ 2244 09f8 F0000000 		.4byte	.LVL103
+ 2245 09fc 710B0000 		.4byte	0xb71
+ 2246 0a00 0D       		.uleb128 0xd
+ 2247 0a01 F4000000 		.4byte	.LVL104
+ 2248 0a05 7C0B0000 		.4byte	0xb7c
+ 2249 0a09 0D       		.uleb128 0xd
+ 2250 0a0a F8000000 		.4byte	.LVL105
+ 2251 0a0e 5A0B0000 		.4byte	0xb5a
+ 2252 0a12 12       		.uleb128 0x12
+ 2253 0a13 00010000 		.4byte	.LVL106
+ 2254 0a17 650B0000 		.4byte	0xb65
+ 2255 0a1b 11       		.uleb128 0x11
+ 2256 0a1c 01       		.uleb128 0x1
+ 2257 0a1d 50       		.byte	0x50
+ 2258 0a1e 01       		.uleb128 0x1
+ 2259 0a1f 32       		.byte	0x32
+ 2260 0a20 11       		.uleb128 0x11
+ 2261 0a21 01       		.uleb128 0x1
+ 2262 0a22 51       		.byte	0x51
+ 2263 0a23 01       		.uleb128 0x1
+ 2264 0a24 38       		.byte	0x38
+ 2265 0a25 00       		.byte	0
+ 2266 0a26 00       		.byte	0
+ 2267 0a27 00       		.byte	0
+ 2268 0a28 13       		.uleb128 0x13
+ 2269 0a29 BB000000 		.4byte	0xbb
+ 2270 0a2d 380A0000 		.4byte	0xa38
+ 2271 0a31 14       		.uleb128 0x14
+ 2272 0a32 00010000 		.4byte	0x100
+ 2273 0a36 3F       		.byte	0x3f
+ 2274 0a37 00       		.byte	0
+ 2275 0a38 0C       		.uleb128 0xc
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 47
+
+
+ 2276 0a39 BB060000 		.4byte	.LASF80
+ 2277 0a3d 01       		.byte	0x1
+ 2278 0a3e 2A       		.byte	0x2a
+ 2279 0a3f 6B020000 		.4byte	0x26b
+ 2280 0a43 05       		.uleb128 0x5
+ 2281 0a44 03       		.byte	0x3
+ 2282 0a45 06000000 		.4byte	CTRL_state
+ 2283 0a49 0C       		.uleb128 0xc
+ 2284 0a4a EE010000 		.4byte	.LASF81
+ 2285 0a4e 01       		.byte	0x1
+ 2286 0a4f 34       		.byte	0x34
+ 2287 0a50 45000000 		.4byte	0x45
+ 2288 0a54 05       		.uleb128 0x5
+ 2289 0a55 03       		.byte	0x3
+ 2290 0a56 00000000 		.4byte	randomNum
+ 2291 0a5a 0C       		.uleb128 0xc
+ 2292 0a5b 9E010000 		.4byte	.LASF82
+ 2293 0a5f 01       		.byte	0x1
+ 2294 0a60 37       		.byte	0x37
+ 2295 0a61 45000000 		.4byte	0x45
+ 2296 0a65 05       		.uleb128 0x5
+ 2297 0a66 03       		.byte	0x3
+ 2298 0a67 04000000 		.4byte	noOfTurns
+ 2299 0a6b 19       		.uleb128 0x19
+ 2300 0a6c A3060000 		.4byte	.LASF83
+ 2301 0a70 09       		.byte	0x9
+ 2302 0a71 40       		.byte	0x40
+ 2303 0a72 DF000000 		.4byte	0xdf
+ 2304 0a76 19       		.uleb128 0x19
+ 2305 0a77 D5010000 		.4byte	.LASF84
+ 2306 0a7b 09       		.byte	0x9
+ 2307 0a7c 47       		.byte	0x47
+ 2308 0a7d EA000000 		.4byte	0xea
+ 2309 0a81 19       		.uleb128 0x19
+ 2310 0a82 94040000 		.4byte	.LASF85
+ 2311 0a86 09       		.byte	0x9
+ 2312 0a87 4A       		.byte	0x4a
+ 2313 0a88 DF000000 		.4byte	0xdf
+ 2314 0a8c 19       		.uleb128 0x19
+ 2315 0a8d 92030000 		.4byte	.LASF86
+ 2316 0a91 0A       		.byte	0xa
+ 2317 0a92 48       		.byte	0x48
+ 2318 0a93 F5000000 		.4byte	0xf5
+ 2319 0a97 19       		.uleb128 0x19
+ 2320 0a98 77010000 		.4byte	.LASF87
+ 2321 0a9c 0B       		.byte	0xb
+ 2322 0a9d 44       		.byte	0x44
+ 2323 0a9e DF000000 		.4byte	0xdf
+ 2324 0aa2 1A       		.uleb128 0x1a
+ 2325 0aa3 E8050000 		.4byte	.LASF88
+ 2326 0aa7 0C       		.byte	0xc
+ 2327 0aa8 1207     		.2byte	0x712
+ 2328 0aaa AE0A0000 		.4byte	0xaae
+ 2329 0aae 05       		.uleb128 0x5
+ 2330 0aaf 97000000 		.4byte	0x97
+ 2331 0ab3 1B       		.uleb128 0x1b
+ 2332 0ab4 FE030000 		.4byte	.LASF89
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 48
+
+
+ 2333 0ab8 07       		.byte	0x7
+ 2334 0ab9 76       		.byte	0x76
+ 2335 0aba E1010000 		.4byte	0x1e1
+ 2336 0abe 05       		.uleb128 0x5
+ 2337 0abf 03       		.byte	0x3
+ 2338 0ac0 00000000 		.4byte	game
+ 2339 0ac4 1B       		.uleb128 0x1b
+ 2340 0ac5 DD020000 		.4byte	.LASF90
+ 2341 0ac9 07       		.byte	0x7
+ 2342 0aca 78       		.byte	0x78
+ 2343 0acb 07010000 		.4byte	0x107
+ 2344 0acf 05       		.uleb128 0x5
+ 2345 0ad0 03       		.byte	0x3
+ 2346 0ad1 00000000 		.4byte	systickCounter
+ 2347 0ad5 1B       		.uleb128 0x1b
+ 2348 0ad6 08040000 		.4byte	.LASF91
+ 2349 0ada 01       		.byte	0x1
+ 2350 0adb 35       		.byte	0x35
+ 2351 0adc 45000000 		.4byte	0x45
+ 2352 0ae0 05       		.uleb128 0x5
+ 2353 0ae1 03       		.byte	0x3
+ 2354 0ae2 00000000 		.4byte	buttonFlag
+ 2355 0ae6 1B       		.uleb128 0x1b
+ 2356 0ae7 D2020000 		.4byte	.LASF92
+ 2357 0aeb 01       		.byte	0x1
+ 2358 0aec 36       		.byte	0x36
+ 2359 0aed 45000000 		.4byte	0x45
+ 2360 0af1 05       		.uleb128 0x5
+ 2361 0af2 03       		.byte	0x3
+ 2362 0af3 00000000 		.4byte	time_count
+ 2363 0af7 1C       		.uleb128 0x1c
+ 2364 0af8 72010000 		.4byte	.LASF93
+ 2365 0afc 72010000 		.4byte	.LASF93
+ 2366 0b00 0D       		.byte	0xd
+ 2367 0b01 88       		.byte	0x88
+ 2368 0b02 1C       		.uleb128 0x1c
+ 2369 0b03 0C000000 		.4byte	.LASF94
+ 2370 0b07 0C000000 		.4byte	.LASF94
+ 2371 0b0b 0E       		.byte	0xe
+ 2372 0b0c 26       		.byte	0x26
+ 2373 0b0d 1C       		.uleb128 0x1c
+ 2374 0b0e A3020000 		.4byte	.LASF95
+ 2375 0b12 A3020000 		.4byte	.LASF95
+ 2376 0b16 0F       		.byte	0xf
+ 2377 0b17 8A       		.byte	0x8a
+ 2378 0b18 1D       		.uleb128 0x1d
+ 2379 0b19 1C010000 		.4byte	.LASF96
+ 2380 0b1d 1C010000 		.4byte	.LASF96
+ 2381 0b21 10       		.byte	0x10
+ 2382 0b22 EF01     		.2byte	0x1ef
+ 2383 0b24 1E       		.uleb128 0x1e
+ 2384 0b25 4F050000 		.4byte	.LASF108
+ 2385 0b29 4F050000 		.4byte	.LASF108
+ 2386 0b2d 1D       		.uleb128 0x1d
+ 2387 0b2e 60010000 		.4byte	.LASF97
+ 2388 0b32 60010000 		.4byte	.LASF97
+ 2389 0b36 10       		.byte	0x10
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 49
+
+
+ 2390 0b37 F901     		.2byte	0x1f9
+ 2391 0b39 1C       		.uleb128 0x1c
+ 2392 0b3a FA020000 		.4byte	.LASF98
+ 2393 0b3e FA020000 		.4byte	.LASF98
+ 2394 0b42 11       		.byte	0x11
+ 2395 0b43 21       		.byte	0x21
+ 2396 0b44 1C       		.uleb128 0x1c
+ 2397 0b45 CA020000 		.4byte	.LASF99
+ 2398 0b49 CA020000 		.4byte	.LASF99
+ 2399 0b4d 12       		.byte	0x12
+ 2400 0b4e E7       		.byte	0xe7
+ 2401 0b4f 1C       		.uleb128 0x1c
+ 2402 0b50 B7020000 		.4byte	.LASF100
+ 2403 0b54 B7020000 		.4byte	.LASF100
+ 2404 0b58 13       		.byte	0x13
+ 2405 0b59 8B       		.byte	0x8b
+ 2406 0b5a 1C       		.uleb128 0x1c
+ 2407 0b5b 61050000 		.4byte	.LASF101
+ 2408 0b5f 61050000 		.4byte	.LASF101
+ 2409 0b63 0F       		.byte	0xf
+ 2410 0b64 88       		.byte	0x88
+ 2411 0b65 1D       		.uleb128 0x1d
+ 2412 0b66 C5050000 		.4byte	.LASF102
+ 2413 0b6a C5050000 		.4byte	.LASF102
+ 2414 0b6e 10       		.byte	0x10
+ 2415 0b6f 4A01     		.2byte	0x14a
+ 2416 0b71 1C       		.uleb128 0x1c
+ 2417 0b72 C6060000 		.4byte	.LASF103
+ 2418 0b76 C6060000 		.4byte	.LASF103
+ 2419 0b7a 14       		.byte	0x14
+ 2420 0b7b 9E       		.byte	0x9e
+ 2421 0b7c 1C       		.uleb128 0x1c
+ 2422 0b7d 26050000 		.4byte	.LASF104
+ 2423 0b81 26050000 		.4byte	.LASF104
+ 2424 0b85 14       		.byte	0x14
+ 2425 0b86 A2       		.byte	0xa2
+ 2426 0b87 00       		.byte	0
+ 2427              		.section	.debug_abbrev,"",%progbits
+ 2428              	.Ldebug_abbrev0:
+ 2429 0000 01       		.uleb128 0x1
+ 2430 0001 11       		.uleb128 0x11
+ 2431 0002 01       		.byte	0x1
+ 2432 0003 25       		.uleb128 0x25
+ 2433 0004 0E       		.uleb128 0xe
+ 2434 0005 13       		.uleb128 0x13
+ 2435 0006 0B       		.uleb128 0xb
+ 2436 0007 03       		.uleb128 0x3
+ 2437 0008 0E       		.uleb128 0xe
+ 2438 0009 1B       		.uleb128 0x1b
+ 2439 000a 0E       		.uleb128 0xe
+ 2440 000b 55       		.uleb128 0x55
+ 2441 000c 17       		.uleb128 0x17
+ 2442 000d 11       		.uleb128 0x11
+ 2443 000e 01       		.uleb128 0x1
+ 2444 000f 10       		.uleb128 0x10
+ 2445 0010 17       		.uleb128 0x17
+ 2446 0011 00       		.byte	0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 50
+
+
+ 2447 0012 00       		.byte	0
+ 2448 0013 02       		.uleb128 0x2
+ 2449 0014 24       		.uleb128 0x24
+ 2450 0015 00       		.byte	0
+ 2451 0016 0B       		.uleb128 0xb
+ 2452 0017 0B       		.uleb128 0xb
+ 2453 0018 3E       		.uleb128 0x3e
+ 2454 0019 0B       		.uleb128 0xb
+ 2455 001a 03       		.uleb128 0x3
+ 2456 001b 0E       		.uleb128 0xe
+ 2457 001c 00       		.byte	0
+ 2458 001d 00       		.byte	0
+ 2459 001e 03       		.uleb128 0x3
+ 2460 001f 16       		.uleb128 0x16
+ 2461 0020 00       		.byte	0
+ 2462 0021 03       		.uleb128 0x3
+ 2463 0022 0E       		.uleb128 0xe
+ 2464 0023 3A       		.uleb128 0x3a
+ 2465 0024 0B       		.uleb128 0xb
+ 2466 0025 3B       		.uleb128 0x3b
+ 2467 0026 0B       		.uleb128 0xb
+ 2468 0027 49       		.uleb128 0x49
+ 2469 0028 13       		.uleb128 0x13
+ 2470 0029 00       		.byte	0
+ 2471 002a 00       		.byte	0
+ 2472 002b 04       		.uleb128 0x4
+ 2473 002c 24       		.uleb128 0x24
+ 2474 002d 00       		.byte	0
+ 2475 002e 0B       		.uleb128 0xb
+ 2476 002f 0B       		.uleb128 0xb
+ 2477 0030 3E       		.uleb128 0x3e
+ 2478 0031 0B       		.uleb128 0xb
+ 2479 0032 03       		.uleb128 0x3
+ 2480 0033 08       		.uleb128 0x8
+ 2481 0034 00       		.byte	0
+ 2482 0035 00       		.byte	0
+ 2483 0036 05       		.uleb128 0x5
+ 2484 0037 35       		.uleb128 0x35
+ 2485 0038 00       		.byte	0
+ 2486 0039 49       		.uleb128 0x49
+ 2487 003a 13       		.uleb128 0x13
+ 2488 003b 00       		.byte	0
+ 2489 003c 00       		.byte	0
+ 2490 003d 06       		.uleb128 0x6
+ 2491 003e 04       		.uleb128 0x4
+ 2492 003f 01       		.byte	0x1
+ 2493 0040 0B       		.uleb128 0xb
+ 2494 0041 0B       		.uleb128 0xb
+ 2495 0042 49       		.uleb128 0x49
+ 2496 0043 13       		.uleb128 0x13
+ 2497 0044 3A       		.uleb128 0x3a
+ 2498 0045 0B       		.uleb128 0xb
+ 2499 0046 3B       		.uleb128 0x3b
+ 2500 0047 0B       		.uleb128 0xb
+ 2501 0048 01       		.uleb128 0x1
+ 2502 0049 13       		.uleb128 0x13
+ 2503 004a 00       		.byte	0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 51
+
+
+ 2504 004b 00       		.byte	0
+ 2505 004c 07       		.uleb128 0x7
+ 2506 004d 28       		.uleb128 0x28
+ 2507 004e 00       		.byte	0
+ 2508 004f 03       		.uleb128 0x3
+ 2509 0050 0E       		.uleb128 0xe
+ 2510 0051 1C       		.uleb128 0x1c
+ 2511 0052 0B       		.uleb128 0xb
+ 2512 0053 00       		.byte	0
+ 2513 0054 00       		.byte	0
+ 2514 0055 08       		.uleb128 0x8
+ 2515 0056 28       		.uleb128 0x28
+ 2516 0057 00       		.byte	0
+ 2517 0058 03       		.uleb128 0x3
+ 2518 0059 0E       		.uleb128 0xe
+ 2519 005a 1C       		.uleb128 0x1c
+ 2520 005b 0D       		.uleb128 0xd
+ 2521 005c 00       		.byte	0
+ 2522 005d 00       		.byte	0
+ 2523 005e 09       		.uleb128 0x9
+ 2524 005f 13       		.uleb128 0x13
+ 2525 0060 01       		.byte	0x1
+ 2526 0061 0B       		.uleb128 0xb
+ 2527 0062 0B       		.uleb128 0xb
+ 2528 0063 3A       		.uleb128 0x3a
+ 2529 0064 0B       		.uleb128 0xb
+ 2530 0065 3B       		.uleb128 0x3b
+ 2531 0066 0B       		.uleb128 0xb
+ 2532 0067 01       		.uleb128 0x1
+ 2533 0068 13       		.uleb128 0x13
+ 2534 0069 00       		.byte	0
+ 2535 006a 00       		.byte	0
+ 2536 006b 0A       		.uleb128 0xa
+ 2537 006c 0D       		.uleb128 0xd
+ 2538 006d 00       		.byte	0
+ 2539 006e 03       		.uleb128 0x3
+ 2540 006f 0E       		.uleb128 0xe
+ 2541 0070 3A       		.uleb128 0x3a
+ 2542 0071 0B       		.uleb128 0xb
+ 2543 0072 3B       		.uleb128 0x3b
+ 2544 0073 0B       		.uleb128 0xb
+ 2545 0074 49       		.uleb128 0x49
+ 2546 0075 13       		.uleb128 0x13
+ 2547 0076 38       		.uleb128 0x38
+ 2548 0077 0B       		.uleb128 0xb
+ 2549 0078 00       		.byte	0
+ 2550 0079 00       		.byte	0
+ 2551 007a 0B       		.uleb128 0xb
+ 2552 007b 2E       		.uleb128 0x2e
+ 2553 007c 01       		.byte	0x1
+ 2554 007d 3F       		.uleb128 0x3f
+ 2555 007e 19       		.uleb128 0x19
+ 2556 007f 03       		.uleb128 0x3
+ 2557 0080 0E       		.uleb128 0xe
+ 2558 0081 3A       		.uleb128 0x3a
+ 2559 0082 0B       		.uleb128 0xb
+ 2560 0083 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 52
+
+
+ 2561 0084 0B       		.uleb128 0xb
+ 2562 0085 49       		.uleb128 0x49
+ 2563 0086 13       		.uleb128 0x13
+ 2564 0087 11       		.uleb128 0x11
+ 2565 0088 01       		.uleb128 0x1
+ 2566 0089 12       		.uleb128 0x12
+ 2567 008a 06       		.uleb128 0x6
+ 2568 008b 40       		.uleb128 0x40
+ 2569 008c 18       		.uleb128 0x18
+ 2570 008d 9742     		.uleb128 0x2117
+ 2571 008f 19       		.uleb128 0x19
+ 2572 0090 01       		.uleb128 0x1
+ 2573 0091 13       		.uleb128 0x13
+ 2574 0092 00       		.byte	0
+ 2575 0093 00       		.byte	0
+ 2576 0094 0C       		.uleb128 0xc
+ 2577 0095 34       		.uleb128 0x34
+ 2578 0096 00       		.byte	0
+ 2579 0097 03       		.uleb128 0x3
+ 2580 0098 0E       		.uleb128 0xe
+ 2581 0099 3A       		.uleb128 0x3a
+ 2582 009a 0B       		.uleb128 0xb
+ 2583 009b 3B       		.uleb128 0x3b
+ 2584 009c 0B       		.uleb128 0xb
+ 2585 009d 49       		.uleb128 0x49
+ 2586 009e 13       		.uleb128 0x13
+ 2587 009f 02       		.uleb128 0x2
+ 2588 00a0 18       		.uleb128 0x18
+ 2589 00a1 00       		.byte	0
+ 2590 00a2 00       		.byte	0
+ 2591 00a3 0D       		.uleb128 0xd
+ 2592 00a4 898201   		.uleb128 0x4109
+ 2593 00a7 00       		.byte	0
+ 2594 00a8 11       		.uleb128 0x11
+ 2595 00a9 01       		.uleb128 0x1
+ 2596 00aa 31       		.uleb128 0x31
+ 2597 00ab 13       		.uleb128 0x13
+ 2598 00ac 00       		.byte	0
+ 2599 00ad 00       		.byte	0
+ 2600 00ae 0E       		.uleb128 0xe
+ 2601 00af 34       		.uleb128 0x34
+ 2602 00b0 00       		.byte	0
+ 2603 00b1 03       		.uleb128 0x3
+ 2604 00b2 0E       		.uleb128 0xe
+ 2605 00b3 3A       		.uleb128 0x3a
+ 2606 00b4 0B       		.uleb128 0xb
+ 2607 00b5 3B       		.uleb128 0x3b
+ 2608 00b6 0B       		.uleb128 0xb
+ 2609 00b7 49       		.uleb128 0x49
+ 2610 00b8 13       		.uleb128 0x13
+ 2611 00b9 00       		.byte	0
+ 2612 00ba 00       		.byte	0
+ 2613 00bb 0F       		.uleb128 0xf
+ 2614 00bc 34       		.uleb128 0x34
+ 2615 00bd 00       		.byte	0
+ 2616 00be 03       		.uleb128 0x3
+ 2617 00bf 0E       		.uleb128 0xe
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 53
+
+
+ 2618 00c0 3A       		.uleb128 0x3a
+ 2619 00c1 0B       		.uleb128 0xb
+ 2620 00c2 3B       		.uleb128 0x3b
+ 2621 00c3 0B       		.uleb128 0xb
+ 2622 00c4 49       		.uleb128 0x49
+ 2623 00c5 13       		.uleb128 0x13
+ 2624 00c6 02       		.uleb128 0x2
+ 2625 00c7 17       		.uleb128 0x17
+ 2626 00c8 00       		.byte	0
+ 2627 00c9 00       		.byte	0
+ 2628 00ca 10       		.uleb128 0x10
+ 2629 00cb 898201   		.uleb128 0x4109
+ 2630 00ce 01       		.byte	0x1
+ 2631 00cf 11       		.uleb128 0x11
+ 2632 00d0 01       		.uleb128 0x1
+ 2633 00d1 31       		.uleb128 0x31
+ 2634 00d2 13       		.uleb128 0x13
+ 2635 00d3 01       		.uleb128 0x1
+ 2636 00d4 13       		.uleb128 0x13
+ 2637 00d5 00       		.byte	0
+ 2638 00d6 00       		.byte	0
+ 2639 00d7 11       		.uleb128 0x11
+ 2640 00d8 8A8201   		.uleb128 0x410a
+ 2641 00db 00       		.byte	0
+ 2642 00dc 02       		.uleb128 0x2
+ 2643 00dd 18       		.uleb128 0x18
+ 2644 00de 9142     		.uleb128 0x2111
+ 2645 00e0 18       		.uleb128 0x18
+ 2646 00e1 00       		.byte	0
+ 2647 00e2 00       		.byte	0
+ 2648 00e3 12       		.uleb128 0x12
+ 2649 00e4 898201   		.uleb128 0x4109
+ 2650 00e7 01       		.byte	0x1
+ 2651 00e8 11       		.uleb128 0x11
+ 2652 00e9 01       		.uleb128 0x1
+ 2653 00ea 31       		.uleb128 0x31
+ 2654 00eb 13       		.uleb128 0x13
+ 2655 00ec 00       		.byte	0
+ 2656 00ed 00       		.byte	0
+ 2657 00ee 13       		.uleb128 0x13
+ 2658 00ef 01       		.uleb128 0x1
+ 2659 00f0 01       		.byte	0x1
+ 2660 00f1 49       		.uleb128 0x49
+ 2661 00f2 13       		.uleb128 0x13
+ 2662 00f3 01       		.uleb128 0x1
+ 2663 00f4 13       		.uleb128 0x13
+ 2664 00f5 00       		.byte	0
+ 2665 00f6 00       		.byte	0
+ 2666 00f7 14       		.uleb128 0x14
+ 2667 00f8 21       		.uleb128 0x21
+ 2668 00f9 00       		.byte	0
+ 2669 00fa 49       		.uleb128 0x49
+ 2670 00fb 13       		.uleb128 0x13
+ 2671 00fc 2F       		.uleb128 0x2f
+ 2672 00fd 0B       		.uleb128 0xb
+ 2673 00fe 00       		.byte	0
+ 2674 00ff 00       		.byte	0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 54
+
+
+ 2675 0100 15       		.uleb128 0x15
+ 2676 0101 2E       		.uleb128 0x2e
+ 2677 0102 01       		.byte	0x1
+ 2678 0103 3F       		.uleb128 0x3f
+ 2679 0104 19       		.uleb128 0x19
+ 2680 0105 03       		.uleb128 0x3
+ 2681 0106 0E       		.uleb128 0xe
+ 2682 0107 3A       		.uleb128 0x3a
+ 2683 0108 0B       		.uleb128 0xb
+ 2684 0109 3B       		.uleb128 0x3b
+ 2685 010a 0B       		.uleb128 0xb
+ 2686 010b 27       		.uleb128 0x27
+ 2687 010c 19       		.uleb128 0x19
+ 2688 010d 11       		.uleb128 0x11
+ 2689 010e 01       		.uleb128 0x1
+ 2690 010f 12       		.uleb128 0x12
+ 2691 0110 06       		.uleb128 0x6
+ 2692 0111 40       		.uleb128 0x40
+ 2693 0112 18       		.uleb128 0x18
+ 2694 0113 9742     		.uleb128 0x2117
+ 2695 0115 19       		.uleb128 0x19
+ 2696 0116 01       		.uleb128 0x1
+ 2697 0117 13       		.uleb128 0x13
+ 2698 0118 00       		.byte	0
+ 2699 0119 00       		.byte	0
+ 2700 011a 16       		.uleb128 0x16
+ 2701 011b 05       		.uleb128 0x5
+ 2702 011c 00       		.byte	0
+ 2703 011d 03       		.uleb128 0x3
+ 2704 011e 08       		.uleb128 0x8
+ 2705 011f 3A       		.uleb128 0x3a
+ 2706 0120 0B       		.uleb128 0xb
+ 2707 0121 3B       		.uleb128 0x3b
+ 2708 0122 0B       		.uleb128 0xb
+ 2709 0123 49       		.uleb128 0x49
+ 2710 0124 13       		.uleb128 0x13
+ 2711 0125 02       		.uleb128 0x2
+ 2712 0126 17       		.uleb128 0x17
+ 2713 0127 00       		.byte	0
+ 2714 0128 00       		.byte	0
+ 2715 0129 17       		.uleb128 0x17
+ 2716 012a 2E       		.uleb128 0x2e
+ 2717 012b 01       		.byte	0x1
+ 2718 012c 3F       		.uleb128 0x3f
+ 2719 012d 19       		.uleb128 0x19
+ 2720 012e 03       		.uleb128 0x3
+ 2721 012f 0E       		.uleb128 0xe
+ 2722 0130 3A       		.uleb128 0x3a
+ 2723 0131 0B       		.uleb128 0xb
+ 2724 0132 3B       		.uleb128 0x3b
+ 2725 0133 0B       		.uleb128 0xb
+ 2726 0134 27       		.uleb128 0x27
+ 2727 0135 19       		.uleb128 0x19
+ 2728 0136 11       		.uleb128 0x11
+ 2729 0137 01       		.uleb128 0x1
+ 2730 0138 12       		.uleb128 0x12
+ 2731 0139 06       		.uleb128 0x6
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 55
+
+
+ 2732 013a 40       		.uleb128 0x40
+ 2733 013b 18       		.uleb128 0x18
+ 2734 013c 9642     		.uleb128 0x2116
+ 2735 013e 19       		.uleb128 0x19
+ 2736 013f 01       		.uleb128 0x1
+ 2737 0140 13       		.uleb128 0x13
+ 2738 0141 00       		.byte	0
+ 2739 0142 00       		.byte	0
+ 2740 0143 18       		.uleb128 0x18
+ 2741 0144 0B       		.uleb128 0xb
+ 2742 0145 01       		.byte	0x1
+ 2743 0146 11       		.uleb128 0x11
+ 2744 0147 01       		.uleb128 0x1
+ 2745 0148 12       		.uleb128 0x12
+ 2746 0149 06       		.uleb128 0x6
+ 2747 014a 00       		.byte	0
+ 2748 014b 00       		.byte	0
+ 2749 014c 19       		.uleb128 0x19
+ 2750 014d 34       		.uleb128 0x34
+ 2751 014e 00       		.byte	0
+ 2752 014f 03       		.uleb128 0x3
+ 2753 0150 0E       		.uleb128 0xe
+ 2754 0151 3A       		.uleb128 0x3a
+ 2755 0152 0B       		.uleb128 0xb
+ 2756 0153 3B       		.uleb128 0x3b
+ 2757 0154 0B       		.uleb128 0xb
+ 2758 0155 49       		.uleb128 0x49
+ 2759 0156 13       		.uleb128 0x13
+ 2760 0157 3F       		.uleb128 0x3f
+ 2761 0158 19       		.uleb128 0x19
+ 2762 0159 3C       		.uleb128 0x3c
+ 2763 015a 19       		.uleb128 0x19
+ 2764 015b 00       		.byte	0
+ 2765 015c 00       		.byte	0
+ 2766 015d 1A       		.uleb128 0x1a
+ 2767 015e 34       		.uleb128 0x34
+ 2768 015f 00       		.byte	0
+ 2769 0160 03       		.uleb128 0x3
+ 2770 0161 0E       		.uleb128 0xe
+ 2771 0162 3A       		.uleb128 0x3a
+ 2772 0163 0B       		.uleb128 0xb
+ 2773 0164 3B       		.uleb128 0x3b
+ 2774 0165 05       		.uleb128 0x5
+ 2775 0166 49       		.uleb128 0x49
+ 2776 0167 13       		.uleb128 0x13
+ 2777 0168 3F       		.uleb128 0x3f
+ 2778 0169 19       		.uleb128 0x19
+ 2779 016a 3C       		.uleb128 0x3c
+ 2780 016b 19       		.uleb128 0x19
+ 2781 016c 00       		.byte	0
+ 2782 016d 00       		.byte	0
+ 2783 016e 1B       		.uleb128 0x1b
+ 2784 016f 34       		.uleb128 0x34
+ 2785 0170 00       		.byte	0
+ 2786 0171 03       		.uleb128 0x3
+ 2787 0172 0E       		.uleb128 0xe
+ 2788 0173 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 56
+
+
+ 2789 0174 0B       		.uleb128 0xb
+ 2790 0175 3B       		.uleb128 0x3b
+ 2791 0176 0B       		.uleb128 0xb
+ 2792 0177 49       		.uleb128 0x49
+ 2793 0178 13       		.uleb128 0x13
+ 2794 0179 3F       		.uleb128 0x3f
+ 2795 017a 19       		.uleb128 0x19
+ 2796 017b 02       		.uleb128 0x2
+ 2797 017c 18       		.uleb128 0x18
+ 2798 017d 00       		.byte	0
+ 2799 017e 00       		.byte	0
+ 2800 017f 1C       		.uleb128 0x1c
+ 2801 0180 2E       		.uleb128 0x2e
+ 2802 0181 00       		.byte	0
+ 2803 0182 3F       		.uleb128 0x3f
+ 2804 0183 19       		.uleb128 0x19
+ 2805 0184 3C       		.uleb128 0x3c
+ 2806 0185 19       		.uleb128 0x19
+ 2807 0186 6E       		.uleb128 0x6e
+ 2808 0187 0E       		.uleb128 0xe
+ 2809 0188 03       		.uleb128 0x3
+ 2810 0189 0E       		.uleb128 0xe
+ 2811 018a 3A       		.uleb128 0x3a
+ 2812 018b 0B       		.uleb128 0xb
+ 2813 018c 3B       		.uleb128 0x3b
+ 2814 018d 0B       		.uleb128 0xb
+ 2815 018e 00       		.byte	0
+ 2816 018f 00       		.byte	0
+ 2817 0190 1D       		.uleb128 0x1d
+ 2818 0191 2E       		.uleb128 0x2e
+ 2819 0192 00       		.byte	0
+ 2820 0193 3F       		.uleb128 0x3f
+ 2821 0194 19       		.uleb128 0x19
+ 2822 0195 3C       		.uleb128 0x3c
+ 2823 0196 19       		.uleb128 0x19
+ 2824 0197 6E       		.uleb128 0x6e
+ 2825 0198 0E       		.uleb128 0xe
+ 2826 0199 03       		.uleb128 0x3
+ 2827 019a 0E       		.uleb128 0xe
+ 2828 019b 3A       		.uleb128 0x3a
+ 2829 019c 0B       		.uleb128 0xb
+ 2830 019d 3B       		.uleb128 0x3b
+ 2831 019e 05       		.uleb128 0x5
+ 2832 019f 00       		.byte	0
+ 2833 01a0 00       		.byte	0
+ 2834 01a1 1E       		.uleb128 0x1e
+ 2835 01a2 2E       		.uleb128 0x2e
+ 2836 01a3 00       		.byte	0
+ 2837 01a4 3F       		.uleb128 0x3f
+ 2838 01a5 19       		.uleb128 0x19
+ 2839 01a6 3C       		.uleb128 0x3c
+ 2840 01a7 19       		.uleb128 0x19
+ 2841 01a8 6E       		.uleb128 0x6e
+ 2842 01a9 0E       		.uleb128 0xe
+ 2843 01aa 03       		.uleb128 0x3
+ 2844 01ab 0E       		.uleb128 0xe
+ 2845 01ac 00       		.byte	0
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 57
+
+
+ 2846 01ad 00       		.byte	0
+ 2847 01ae 00       		.byte	0
+ 2848              		.section	.debug_loc,"",%progbits
+ 2849              	.Ldebug_loc0:
+ 2850              	.LLST0:
+ 2851 0000 08000000 		.4byte	.LVL2
+ 2852 0004 32000000 		.4byte	.LVL6
+ 2853 0008 0300     		.2byte	0x3
+ 2854 000a 08       		.byte	0x8
+ 2855 000b 3F       		.byte	0x3f
+ 2856 000c 9F       		.byte	0x9f
+ 2857 000d 32000000 		.4byte	.LVL6
+ 2858 0011 4C000000 		.4byte	.LVL9
+ 2859 0015 0200     		.2byte	0x2
+ 2860 0017 36       		.byte	0x36
+ 2861 0018 9F       		.byte	0x9f
+ 2862 0019 4C000000 		.4byte	.LVL9
+ 2863 001d 50000000 		.4byte	.LVL10
+ 2864 0021 0300     		.2byte	0x3
+ 2865 0023 08       		.byte	0x8
+ 2866 0024 3F       		.byte	0x3f
+ 2867 0025 9F       		.byte	0x9f
+ 2868 0026 50000000 		.4byte	.LVL10
+ 2869 002a 6A000000 		.4byte	.LVL13
+ 2870 002e 0300     		.2byte	0x3
+ 2871 0030 08       		.byte	0x8
+ 2872 0031 5B       		.byte	0x5b
+ 2873 0032 9F       		.byte	0x9f
+ 2874 0033 6A000000 		.4byte	.LVL13
+ 2875 0037 78000000 		.4byte	.LFE112
+ 2876 003b 0300     		.2byte	0x3
+ 2877 003d 08       		.byte	0x8
+ 2878 003e 3F       		.byte	0x3f
+ 2879 003f 9F       		.byte	0x9f
+ 2880 0040 00000000 		.4byte	0
+ 2881 0044 00000000 		.4byte	0
+ 2882              	.LLST1:
+ 2883 0048 00000000 		.4byte	.LVL14
+ 2884 004c 0C000000 		.4byte	.LVL15
+ 2885 0050 0100     		.2byte	0x1
+ 2886 0052 50       		.byte	0x50
+ 2887 0053 0C000000 		.4byte	.LVL15
+ 2888 0057 98020000 		.4byte	.LFE114
+ 2889 005b 0400     		.2byte	0x4
+ 2890 005d F3       		.byte	0xf3
+ 2891 005e 01       		.uleb128 0x1
+ 2892 005f 50       		.byte	0x50
+ 2893 0060 9F       		.byte	0x9f
+ 2894 0061 00000000 		.4byte	0
+ 2895 0065 00000000 		.4byte	0
+ 2896              	.LLST2:
+ 2897 0069 00000000 		.4byte	.LVL70
+ 2898 006d 23000000 		.4byte	.LVL71-1
+ 2899 0071 0100     		.2byte	0x1
+ 2900 0073 50       		.byte	0x50
+ 2901 0074 23000000 		.4byte	.LVL71-1
+ 2902 0078 36000000 		.4byte	.LVL74
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 58
+
+
+ 2903 007c 0400     		.2byte	0x4
+ 2904 007e F3       		.byte	0xf3
+ 2905 007f 01       		.uleb128 0x1
+ 2906 0080 50       		.byte	0x50
+ 2907 0081 9F       		.byte	0x9f
+ 2908 0082 36000000 		.4byte	.LVL74
+ 2909 0086 45000000 		.4byte	.LVL75-1
+ 2910 008a 0100     		.2byte	0x1
+ 2911 008c 50       		.byte	0x50
+ 2912 008d 45000000 		.4byte	.LVL75-1
+ 2913 0091 58000000 		.4byte	.LVL78
+ 2914 0095 0400     		.2byte	0x4
+ 2915 0097 F3       		.byte	0xf3
+ 2916 0098 01       		.uleb128 0x1
+ 2917 0099 50       		.byte	0x50
+ 2918 009a 9F       		.byte	0x9f
+ 2919 009b 58000000 		.4byte	.LVL78
+ 2920 009f 5F000000 		.4byte	.LVL79-1
+ 2921 00a3 0100     		.2byte	0x1
+ 2922 00a5 50       		.byte	0x50
+ 2923 00a6 5F000000 		.4byte	.LVL79-1
+ 2924 00aa 62000000 		.4byte	.LVL80
+ 2925 00ae 0400     		.2byte	0x4
+ 2926 00b0 F3       		.byte	0xf3
+ 2927 00b1 01       		.uleb128 0x1
+ 2928 00b2 50       		.byte	0x50
+ 2929 00b3 9F       		.byte	0x9f
+ 2930 00b4 62000000 		.4byte	.LVL80
+ 2931 00b8 69000000 		.4byte	.LVL81-1
+ 2932 00bc 0100     		.2byte	0x1
+ 2933 00be 50       		.byte	0x50
+ 2934 00bf 69000000 		.4byte	.LVL81-1
+ 2935 00c3 6C000000 		.4byte	.LVL82
+ 2936 00c7 0400     		.2byte	0x4
+ 2937 00c9 F3       		.byte	0xf3
+ 2938 00ca 01       		.uleb128 0x1
+ 2939 00cb 50       		.byte	0x50
+ 2940 00cc 9F       		.byte	0x9f
+ 2941 00cd 6C000000 		.4byte	.LVL82
+ 2942 00d1 6E000000 		.4byte	.LVL83
+ 2943 00d5 0100     		.2byte	0x1
+ 2944 00d7 50       		.byte	0x50
+ 2945 00d8 6E000000 		.4byte	.LVL83
+ 2946 00dc 30010000 		.4byte	.LFE113
+ 2947 00e0 0400     		.2byte	0x4
+ 2948 00e2 F3       		.byte	0xf3
+ 2949 00e3 01       		.uleb128 0x1
+ 2950 00e4 50       		.byte	0x50
+ 2951 00e5 9F       		.byte	0x9f
+ 2952 00e6 00000000 		.4byte	0
+ 2953 00ea 00000000 		.4byte	0
+ 2954              	.LLST3:
+ 2955 00ee 24000000 		.4byte	.LVL71
+ 2956 00f2 2A000000 		.4byte	.LVL72
+ 2957 00f6 0100     		.2byte	0x1
+ 2958 00f8 50       		.byte	0x50
+ 2959 00f9 46000000 		.4byte	.LVL75
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 59
+
+
+ 2960 00fd 4C000000 		.4byte	.LVL76
+ 2961 0101 0100     		.2byte	0x1
+ 2962 0103 50       		.byte	0x50
+ 2963 0104 00000000 		.4byte	0
+ 2964 0108 00000000 		.4byte	0
+ 2965              	.LLST4:
+ 2966 010c B2000000 		.4byte	.LVL93
+ 2967 0110 B4000000 		.4byte	.LVL94
+ 2968 0114 0100     		.2byte	0x1
+ 2969 0116 50       		.byte	0x50
+ 2970 0117 B4000000 		.4byte	.LVL94
+ 2971 011b 06010000 		.4byte	.LVL107
+ 2972 011f 0100     		.2byte	0x1
+ 2973 0121 54       		.byte	0x54
+ 2974 0122 00000000 		.4byte	0
+ 2975 0126 00000000 		.4byte	0
+ 2976              		.section	.debug_aranges,"",%progbits
+ 2977 0000 34000000 		.4byte	0x34
+ 2978 0004 0200     		.2byte	0x2
+ 2979 0006 00000000 		.4byte	.Ldebug_info0
+ 2980 000a 04       		.byte	0x4
+ 2981 000b 00       		.byte	0
+ 2982 000c 0000     		.2byte	0
+ 2983 000e 0000     		.2byte	0
+ 2984 0010 00000000 		.4byte	.LFB111
+ 2985 0014 2C000000 		.4byte	.LFE111-.LFB111
+ 2986 0018 00000000 		.4byte	.LFB112
+ 2987 001c 78000000 		.4byte	.LFE112-.LFB112
+ 2988 0020 00000000 		.4byte	.LFB114
+ 2989 0024 98020000 		.4byte	.LFE114-.LFB114
+ 2990 0028 00000000 		.4byte	.LFB113
+ 2991 002c 30010000 		.4byte	.LFE113-.LFB113
+ 2992 0030 00000000 		.4byte	0
+ 2993 0034 00000000 		.4byte	0
+ 2994              		.section	.debug_ranges,"",%progbits
+ 2995              	.Ldebug_ranges0:
+ 2996 0000 00000000 		.4byte	.LFB111
+ 2997 0004 2C000000 		.4byte	.LFE111
+ 2998 0008 00000000 		.4byte	.LFB112
+ 2999 000c 78000000 		.4byte	.LFE112
+ 3000 0010 00000000 		.4byte	.LFB114
+ 3001 0014 98020000 		.4byte	.LFE114
+ 3002 0018 00000000 		.4byte	.LFB113
+ 3003 001c 30010000 		.4byte	.LFE113
+ 3004 0020 00000000 		.4byte	0
+ 3005 0024 00000000 		.4byte	0
+ 3006              		.section	.debug_line,"",%progbits
+ 3007              	.Ldebug_line0:
+ 3008 0000 E4030000 		.section	.debug_str,"MS",%progbits,1
+ 3008      02002603 
+ 3008      00000201 
+ 3008      FB0E0D00 
+ 3008      01010101 
+ 3009              	.LASF18:
+ 3010 0000 6C6F6E67 		.ascii	"long double\000"
+ 3010      20646F75 
+ 3010      626C6500 
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 60
+
+
+ 3011              	.LASF94:
+ 3012 000c 50696E5F 		.ascii	"Pin_SelA_Write\000"
+ 3012      53656C41 
+ 3012      5F577269 
+ 3012      746500
+ 3013              	.LASF33:
+ 3014 001b 52435F45 		.ascii	"RC_ERROR_BUFFER_FULL\000"
+ 3014      52524F52 
+ 3014      5F425546 
+ 3014      4645525F 
+ 3014      46554C4C 
+ 3015              	.LASF21:
+ 3016 0030 45455F55 		.ascii	"EE_UREG\000"
+ 3016      52454700 
+ 3017              	.LASF62:
+ 3018 0038 45565F52 		.ascii	"EV_RIGHT_RELEASED\000"
+ 3018      49474854 
+ 3018      5F52454C 
+ 3018      45415345 
+ 3018      4400
+ 3019              	.LASF69:
+ 3020 004a 4354524C 		.ascii	"CTRL_STATE_USERACTION\000"
+ 3020      5F535441 
+ 3020      54455F55 
+ 3020      53455241 
+ 3020      4354494F 
+ 3021              	.LASF68:
+ 3022 0060 4354524C 		.ascii	"CTRL_STATE_WAIT_TIMEOUT\000"
+ 3022      5F535441 
+ 3022      54455F57 
+ 3022      4149545F 
+ 3022      54494D45 
+ 3023              	.LASF63:
+ 3024 0078 45565F62 		.ascii	"EV_button1Press\000"
+ 3024      7574746F 
+ 3024      6E315072 
+ 3024      65737300 
+ 3025              	.LASF40:
+ 3026 0088 52435F45 		.ascii	"RC_ERROR_WRITE_ONLY\000"
+ 3026      52524F52 
+ 3026      5F575249 
+ 3026      54455F4F 
+ 3026      4E4C5900 
+ 3027              	.LASF2:
+ 3028 009c 73686F72 		.ascii	"short int\000"
+ 3028      7420696E 
+ 3028      7400
+ 3029              	.LASF31:
+ 3030 00a6 52435F45 		.ascii	"RC_ERROR_OVERRUN\000"
+ 3030      52524F52 
+ 3030      5F4F5645 
+ 3030      5252554E 
+ 3030      00
+ 3031              	.LASF43:
+ 3032 00b7 52435F45 		.ascii	"RC_ERROR_WRITE_FAILS\000"
+ 3032      52524F52 
+ 3032      5F575249 
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 61
+
+
+ 3032      54455F46 
+ 3032      41494C53 
+ 3033              	.LASF24:
+ 3034 00cc 73697A65 		.ascii	"sizetype\000"
+ 3034      74797065 
+ 3034      00
+ 3035              	.LASF106:
+ 3036 00d5 736F7572 		.ascii	"source\\asw\\control.c\000"
+ 3036      63655C61 
+ 3036      73775C63 
+ 3036      6F6E7472 
+ 3036      6F6C2E63 
+ 3037              	.LASF28:
+ 3038 00ea 52435F45 		.ascii	"RC_ERROR_ZERO\000"
+ 3038      52524F52 
+ 3038      5F5A4552 
+ 3038      4F00
+ 3039              	.LASF22:
+ 3040 00f8 45455F46 		.ascii	"EE_FREG\000"
+ 3040      52454700 
+ 3041              	.LASF60:
+ 3042 0100 45565F52 		.ascii	"EV_RIGHT_PRESSED\000"
+ 3042      49474854 
+ 3042      5F505245 
+ 3042      53534544 
+ 3042      00
+ 3043              	.LASF7:
+ 3044 0111 5F5F7569 		.ascii	"__uint32_t\000"
+ 3044      6E743332 
+ 3044      5F7400
+ 3045              	.LASF96:
+ 3046 011c 45455F6F 		.ascii	"EE_oo_SetRelAlarm\000"
+ 3046      6F5F5365 
+ 3046      7452656C 
+ 3046      416C6172 
+ 3046      6D00
+ 3047              	.LASF74:
+ 3048 012e 72616E64 		.ascii	"randomTimeMs\000"
+ 3048      6F6D5469 
+ 3048      6D654D73 
+ 3048      00
+ 3049              	.LASF54:
+ 3050 013b 6D794761 		.ascii	"myGame_t\000"
+ 3050      6D655F74 
+ 3050      00
+ 3051              	.LASF23:
+ 3052 0144 45455F54 		.ascii	"EE_TID\000"
+ 3052      494400
+ 3053              	.LASF71:
+ 3054 014b 4354524C 		.ascii	"CTRL_state_t\000"
+ 3054      5F737461 
+ 3054      74655F74 
+ 3054      00
+ 3055              	.LASF12:
+ 3056 0158 75696E74 		.ascii	"uint8_t\000"
+ 3056      385F7400 
+ 3057              	.LASF97:
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 62
+
+
+ 3058 0160 45455F6F 		.ascii	"EE_oo_CancelAlarm\000"
+ 3058      6F5F4361 
+ 3058      6E63656C 
+ 3058      416C6172 
+ 3058      6D00
+ 3059              	.LASF93:
+ 3060 0172 72616E64 		.ascii	"rand\000"
+ 3060      00
+ 3061              	.LASF87:
+ 3062 0177 45455F49 		.ascii	"EE_IRQ_nesting_level\000"
+ 3062      52515F6E 
+ 3062      65737469 
+ 3062      6E675F6C 
+ 3062      6576656C 
+ 3063              	.LASF76:
+ 3064 018c 76616C69 		.ascii	"validateBtnPress1\000"
+ 3064      64617465 
+ 3064      42746E50 
+ 3064      72657373 
+ 3064      3100
+ 3065              	.LASF82:
+ 3066 019e 6E6F4F66 		.ascii	"noOfTurns\000"
+ 3066      5475726E 
+ 3066      7300
+ 3067              	.LASF15:
+ 3068 01a8 666C6F61 		.ascii	"float\000"
+ 3068      7400
+ 3069              	.LASF50:
+ 3070 01ae 52435F45 		.ascii	"RC_ERROR_NOT_IMPLEMENTED\000"
+ 3070      52524F52 
+ 3070      5F4E4F54 
+ 3070      5F494D50 
+ 3070      4C454D45 
+ 3071              	.LASF9:
+ 3072 01c7 6C6F6E67 		.ascii	"long long int\000"
+ 3072      206C6F6E 
+ 3072      6720696E 
+ 3072      7400
+ 3073              	.LASF84:
+ 3074 01d5 45455F6F 		.ascii	"EE_oo_IRQ_suspend_status\000"
+ 3074      6F5F4952 
+ 3074      515F7375 
+ 3074      7370656E 
+ 3074      645F7374 
+ 3075              	.LASF81:
+ 3076 01ee 72616E64 		.ascii	"randomNum\000"
+ 3076      6F6D4E75 
+ 3076      6D00
+ 3077              	.LASF44:
+ 3078 01f8 52435F45 		.ascii	"RC_ERROR_NOT_MATCH\000"
+ 3078      52524F52 
+ 3078      5F4E4F54 
+ 3078      5F4D4154 
+ 3078      434800
+ 3079              	.LASF49:
+ 3080 020b 52435F45 		.ascii	"RC_ERROR_UNKNOWN\000"
+ 3080      52524F52 
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 63
+
+
+ 3080      5F554E4B 
+ 3080      4E4F574E 
+ 3080      00
+ 3081              	.LASF6:
+ 3082 021c 6C6F6E67 		.ascii	"long int\000"
+ 3082      20696E74 
+ 3082      00
+ 3083              	.LASF32:
+ 3084 0225 52435F45 		.ascii	"RC_ERROR_UNDERRUN\000"
+ 3084      52524F52 
+ 3084      5F554E44 
+ 3084      45525255 
+ 3084      4E00
+ 3085              	.LASF34:
+ 3086 0237 52435F45 		.ascii	"RC_ERROR_BUFFER_EMTPY\000"
+ 3086      52524F52 
+ 3086      5F425546 
+ 3086      4645525F 
+ 3086      454D5450 
+ 3087              	.LASF35:
+ 3088 024d 52435F45 		.ascii	"RC_ERROR_BUSY\000"
+ 3088      52524F52 
+ 3088      5F425553 
+ 3088      5900
+ 3089              	.LASF75:
+ 3090 025b 62697450 		.ascii	"bitPattern\000"
+ 3090      61747465 
+ 3090      726E00
+ 3091              	.LASF4:
+ 3092 0266 5F5F7569 		.ascii	"__uint8_t\000"
+ 3092      6E74385F 
+ 3092      7400
+ 3093              	.LASF61:
+ 3094 0270 45565F52 		.ascii	"EV_RIGHT_HIGH\000"
+ 3094      49474854 
+ 3094      5F484947 
+ 3094      4800
+ 3095              	.LASF46:
+ 3096 027e 52435F45 		.ascii	"RC_ERROR_BAD_DATA\000"
+ 3096      52524F52 
+ 3096      5F424144 
+ 3096      5F444154 
+ 3096      4100
+ 3097              	.LASF39:
+ 3098 0290 52435F45 		.ascii	"RC_ERROR_READ_ONLY\000"
+ 3098      52524F52 
+ 3098      5F524541 
+ 3098      445F4F4E 
+ 3098      4C5900
+ 3099              	.LASF95:
+ 3100 02a3 73657665 		.ascii	"sevenSegmentDisplay\000"
+ 3100      6E536567 
+ 3100      6D656E74 
+ 3100      44697370 
+ 3100      6C617900 
+ 3101              	.LASF100:
+ 3102 02b7 55415254 		.ascii	"UART_LOG_PutString\000"
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 64
+
+
+ 3102      5F4C4F47 
+ 3102      5F507574 
+ 3102      53747269 
+ 3102      6E6700
+ 3103              	.LASF99:
+ 3104 02ca 73707269 		.ascii	"sprintf\000"
+ 3104      6E746600 
+ 3105              	.LASF92:
+ 3106 02d2 74696D65 		.ascii	"time_count\000"
+ 3106      5F636F75 
+ 3106      6E7400
+ 3107              	.LASF90:
+ 3108 02dd 73797374 		.ascii	"systickCounter\000"
+ 3108      69636B43 
+ 3108      6F756E74 
+ 3108      657200
+ 3109              	.LASF1:
+ 3110 02ec 756E7369 		.ascii	"unsigned char\000"
+ 3110      676E6564 
+ 3110      20636861 
+ 3110      7200
+ 3111              	.LASF98:
+ 3112 02fa 7374726C 		.ascii	"strlen\000"
+ 3112      656E00
+ 3113              	.LASF20:
+ 3114 0301 45455F55 		.ascii	"EE_UINT32\000"
+ 3114      494E5433 
+ 3114      3200
+ 3115              	.LASF0:
+ 3116 030b 7369676E 		.ascii	"signed char\000"
+ 3116      65642063 
+ 3116      68617200 
+ 3117              	.LASF53:
+ 3118 0317 63726374 		.ascii	"crctBtnPress\000"
+ 3118      42746E50 
+ 3118      72657373 
+ 3118      00
+ 3119              	.LASF10:
+ 3120 0324 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 3120      206C6F6E 
+ 3120      6720756E 
+ 3120      7369676E 
+ 3120      65642069 
+ 3121              	.LASF14:
+ 3122 033b 75696E74 		.ascii	"uint32_t\000"
+ 3122      33325F74 
+ 3122      00
+ 3123              	.LASF64:
+ 3124 0344 45565F62 		.ascii	"EV_button2Press\000"
+ 3124      7574746F 
+ 3124      6E325072 
+ 3124      65737300 
+ 3125              	.LASF37:
+ 3126 0354 52435F45 		.ascii	"RC_ERROR_OPEN\000"
+ 3126      52524F52 
+ 3126      5F4F5045 
+ 3126      4E00
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 65
+
+
+ 3127              	.LASF56:
+ 3128 0362 45565F4C 		.ascii	"EV_LEFT_PRESSED\000"
+ 3128      4546545F 
+ 3128      50524553 
+ 3128      53454400 
+ 3129              	.LASF8:
+ 3130 0372 6C6F6E67 		.ascii	"long unsigned int\000"
+ 3130      20756E73 
+ 3130      69676E65 
+ 3130      6420696E 
+ 3130      7400
+ 3131              	.LASF27:
+ 3132 0384 52435F45 		.ascii	"RC_ERROR_NULL\000"
+ 3132      52524F52 
+ 3132      5F4E554C 
+ 3132      4C00
+ 3133              	.LASF86:
+ 3134 0392 45455F73 		.ascii	"EE_std_endcycle_next_tid\000"
+ 3134      74645F65 
+ 3134      6E646379 
+ 3134      636C655F 
+ 3134      6E657874 
+ 3135              	.LASF19:
+ 3136 03ab 45455F49 		.ascii	"EE_INT32\000"
+ 3136      4E543332 
+ 3136      00
+ 3137              	.LASF25:
+ 3138 03b4 52435F53 		.ascii	"RC_SUCCESS\000"
+ 3138      55434345 
+ 3138      535300
+ 3139              	.LASF66:
+ 3140 03bf 4354524C 		.ascii	"CTRL_event_t\000"
+ 3140      5F657665 
+ 3140      6E745F74 
+ 3140      00
+ 3141              	.LASF3:
+ 3142 03cc 73686F72 		.ascii	"short unsigned int\000"
+ 3142      7420756E 
+ 3142      7369676E 
+ 3142      65642069 
+ 3142      6E7400
+ 3143              	.LASF73:
+ 3144 03df 72616E64 		.ascii	"randomNumGenerate\000"
+ 3144      6F6D4E75 
+ 3144      6D47656E 
+ 3144      65726174 
+ 3144      6500
+ 3145              	.LASF57:
+ 3146 03f1 45565F4C 		.ascii	"EV_LEFT_HIGH\000"
+ 3146      4546545F 
+ 3146      48494748 
+ 3146      00
+ 3147              	.LASF89:
+ 3148 03fe 67616D65 		.ascii	"game\000"
+ 3148      00
+ 3149              	.LASF17:
+ 3150 0403 63686172 		.ascii	"char\000"
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 66
+
+
+ 3150      00
+ 3151              	.LASF91:
+ 3152 0408 62757474 		.ascii	"buttonFlag\000"
+ 3152      6F6E466C 
+ 3152      616700
+ 3153              	.LASF29:
+ 3154 0413 52435F45 		.ascii	"RC_ERROR_MEMORY\000"
+ 3154      52524F52 
+ 3154      5F4D454D 
+ 3154      4F525900 
+ 3155              	.LASF79:
+ 3156 0423 72616E64 		.ascii	"randomTime\000"
+ 3156      6F6D5469 
+ 3156      6D6500
+ 3157              	.LASF13:
+ 3158 042e 696E7433 		.ascii	"int32_t\000"
+ 3158      325F7400 
+ 3159              	.LASF58:
+ 3160 0436 45565F4C 		.ascii	"EV_LEFT_RELEASED\000"
+ 3160      4546545F 
+ 3160      52454C45 
+ 3160      41534544 
+ 3160      00
+ 3161              	.LASF42:
+ 3162 0447 52435F45 		.ascii	"RC_ERROR_READ_FAILS\000"
+ 3162      52524F52 
+ 3162      5F524541 
+ 3162      445F4641 
+ 3162      494C5300 
+ 3163              	.LASF52:
+ 3164 045b 746F7461 		.ascii	"totalTime\000"
+ 3164      6C54696D 
+ 3164      6500
+ 3165              	.LASF45:
+ 3166 0465 52435F45 		.ascii	"RC_ERROR_BAD_PARAM\000"
+ 3166      52524F52 
+ 3166      5F424144 
+ 3166      5F504152 
+ 3166      414D00
+ 3167              	.LASF26:
+ 3168 0478 52435F45 		.ascii	"RC_ERROR\000"
+ 3168      52524F52 
+ 3168      00
+ 3169              	.LASF55:
+ 3170 0481 45565F4C 		.ascii	"EV_LEFT_LOW\000"
+ 3170      4546545F 
+ 3170      4C4F5700 
+ 3171              	.LASF77:
+ 3172 048d 62756666 		.ascii	"buffer\000"
+ 3172      657200
+ 3173              	.LASF85:
+ 3174 0494 45455F41 		.ascii	"EE_ApplicationMode\000"
+ 3174      70706C69 
+ 3174      63617469 
+ 3174      6F6E4D6F 
+ 3174      646500
+ 3175              	.LASF72:
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 67
+
+
+ 3176 04a7 72616E64 		.ascii	"randomTimeGenerate\000"
+ 3176      6F6D5469 
+ 3176      6D654765 
+ 3176      6E657261 
+ 3176      746500
+ 3177              	.LASF16:
+ 3178 04ba 646F7562 		.ascii	"double\000"
+ 3178      6C6500
+ 3179              	.LASF59:
+ 3180 04c1 45565F52 		.ascii	"EV_RIGHT_LOW\000"
+ 3180      49474854 
+ 3180      5F4C4F57 
+ 3180      00
+ 3181              	.LASF107:
+ 3182 04ce 443A5C70 		.ascii	"D:\\psoc-workspace\\Lab Assignments\\Workspace02\\e"
+ 3182      736F632D 
+ 3182      776F726B 
+ 3182      73706163 
+ 3182      655C4C61 
+ 3183 04fd 72696B61 		.ascii	"rikaReactionGame.cydsn\000"
+ 3183      52656163 
+ 3183      74696F6E 
+ 3183      47616D65 
+ 3183      2E637964 
+ 3184              	.LASF38:
+ 3185 0514 52435F45 		.ascii	"RC_ERROR_CHECKSUM\000"
+ 3185      52524F52 
+ 3185      5F434845 
+ 3185      434B5355 
+ 3185      4D00
+ 3186              	.LASF104:
+ 3187 0526 73746F70 		.ascii	"stopFaderGlower\000"
+ 3187      46616465 
+ 3187      72476C6F 
+ 3187      77657200 
+ 3188              	.LASF30:
+ 3189 0536 52435F45 		.ascii	"RC_ERROR_RANGE\000"
+ 3189      52524F52 
+ 3189      5F52414E 
+ 3189      474500
+ 3190              	.LASF5:
+ 3191 0545 5F5F696E 		.ascii	"__int32_t\000"
+ 3191      7433325F 
+ 3191      7400
+ 3192              	.LASF108:
+ 3193 054f 6D656D73 		.ascii	"memset\000"
+ 3193      657400
+ 3194              	.LASF65:
+ 3195 0556 45565F74 		.ascii	"EV_timeOut\000"
+ 3195      696D654F 
+ 3195      757400
+ 3196              	.LASF101:
+ 3197 0561 73657665 		.ascii	"sevenSegmentInit\000"
+ 3197      6E536567 
+ 3197      6D656E74 
+ 3197      496E6974 
+ 3197      00
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 68
+
+
+ 3198              	.LASF48:
+ 3199 0572 52435F45 		.ascii	"RC_ERROR_INVALID_STATE\000"
+ 3199      52524F52 
+ 3199      5F494E56 
+ 3199      414C4944 
+ 3199      5F535441 
+ 3200              	.LASF47:
+ 3201 0589 52435F45 		.ascii	"RC_ERROR_CANCELED\000"
+ 3201      52524F52 
+ 3201      5F43414E 
+ 3201      43454C45 
+ 3201      4400
+ 3202              	.LASF67:
+ 3203 059b 4354524C 		.ascii	"CTRL_STATE_WAIT_BTNPRESS\000"
+ 3203      5F535441 
+ 3203      54455F57 
+ 3203      4149545F 
+ 3203      42544E50 
+ 3204              	.LASF41:
+ 3205 05b4 52435F45 		.ascii	"RC_ERROR_INVALID\000"
+ 3205      52524F52 
+ 3205      5F494E56 
+ 3205      414C4944 
+ 3205      00
+ 3206              	.LASF102:
+ 3207 05c5 45455F6F 		.ascii	"EE_oo_SetEvent\000"
+ 3207      6F5F5365 
+ 3207      74457665 
+ 3207      6E7400
+ 3208              	.LASF70:
+ 3209 05d4 4354524C 		.ascii	"CTRL_STATE_GAMEENDS\000"
+ 3209      5F535441 
+ 3209      54455F47 
+ 3209      414D4545 
+ 3209      4E445300 
+ 3210              	.LASF88:
+ 3211 05e8 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 3211      52784275 
+ 3211      66666572 
+ 3211      00
+ 3212              	.LASF105:
+ 3213 05f5 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 3213      43313120 
+ 3213      352E342E 
+ 3213      31203230 
+ 3213      31363036 
+ 3214 0628 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 3214      20726576 
+ 3214      6973696F 
+ 3214      6E203233 
+ 3214      37373135 
+ 3215 065b 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 3215      66756E63 
+ 3215      74696F6E 
+ 3215      2D736563 
+ 3215      74696F6E 
+ 3216              	.LASF11:
+ARM GAS  C:\Users\abhim\AppData\Local\Temp\ccbpAwgu.s 			page 69
+
+
+ 3217 0683 756E7369 		.ascii	"unsigned int\000"
+ 3217      676E6564 
+ 3217      20696E74 
+ 3217      00
+ 3218              	.LASF78:
+ 3219 0690 4354524C 		.ascii	"CTRL_processEvent1\000"
+ 3219      5F70726F 
+ 3219      63657373 
+ 3219      4576656E 
+ 3219      743100
+ 3220              	.LASF83:
+ 3221 06a3 45455F6F 		.ascii	"EE_oo_IRQ_disable_count\000"
+ 3221      6F5F4952 
+ 3221      515F6469 
+ 3221      7361626C 
+ 3221      655F636F 
+ 3222              	.LASF80:
+ 3223 06bb 4354524C 		.ascii	"CTRL_state\000"
+ 3223      5F737461 
+ 3223      746500
+ 3224              	.LASF103:
+ 3225 06c6 4C45445F 		.ascii	"LED_init\000"
+ 3225      696E6974 
+ 3225      00
+ 3226              	.LASF51:
+ 3227 06cf 52435F74 		.ascii	"RC_t\000"
+ 3227      00
+ 3228              	.LASF36:
+ 3229 06d4 52435F45 		.ascii	"RC_ERROR_TIME_OUT\000"
+ 3229      52524F52 
+ 3229      5F54494D 
+ 3229      455F4F55 
+ 3229      5400
+ 3230              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
